@@ -1,2 +1,2 @@
 # UIPorter
-Convert UI code between existing GUI frameworks
+Convert UI code between frameworks into their native languages
