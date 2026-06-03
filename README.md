@@ -113,7 +113,7 @@
 
 ### AI Setup *(optional)*
 
-1. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey)
+1. Get a API key from [Google Cloud](https://aistudio.google.com/apikey)
 2. Open UIPorter → switch to the **AI** tab
 3. Paste your key into the **API Key** field - it saves automatically
 
