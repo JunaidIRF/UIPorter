@@ -40,7 +40,7 @@
 </p>
 
 <p align="center">
-  <video src="assets/video.mp4" width="90%" controls></video>
+  <video src="https://github.com/user-attachments/assets/b06c52c9-68b4-46da-974c-0bc70fc065a7" width="90%" controls></video>
 </p>
 
 <p align="center">
