@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.HeaderBar?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.fxmisc.richtext.CodeArea?>
+
+<VBox prefHeight="700.0" prefWidth="1100.0" spacing="0" stylesheets="@style.css"
+      xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.jabcodex.uiporter.PrimaryController">
+  <children>
+
+    <!-- â”€â”€ CUSTOM TITLE BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- ── HEADER BAR (native title-bar integration via StageStyle.EXTENDED) ── -->
+    <HeaderBar fx:id="headerBar" styleClass="title-bar" minHeight="40.0" prefHeight="40.0">
+      <leading>
+        <HBox alignment="CENTER_LEFT">
+          <children>
+            <Button fx:id="tabConvertBtn" text="Convert" styleClass="tab-btn,tab-btn-selected" mnemonicParsing="false">
+              <graphic><ImageView fitWidth="18" fitHeight="18" pickOnBounds="true" preserveRatio="true">
+                <image><Image url="@icons/icon_tab_convert.png" /></image>
+              </ImageView></graphic>
+            </Button>
+            <Button fx:id="tabAIBtn" text="AI" styleClass="tab-btn" mnemonicParsing="false">
+              <graphic><ImageView fitWidth="18" fitHeight="18" pickOnBounds="true" preserveRatio="true">
+                <image><Image url="@icons/icon_tab_ai.png" /></image>
+              </ImageView></graphic>
+            </Button>
+            <Button fx:id="tabSettingsBtn" text="Settings" styleClass="tab-btn" mnemonicParsing="false">
+              <graphic><ImageView fitWidth="18" fitHeight="18" pickOnBounds="true" preserveRatio="true">
+                <image><Image url="@icons/icon_tab_settings.png" /></image>
+              </ImageView></graphic>
+            </Button>
+          </children>
+        </HBox>
+      </leading>
+      <trailing>
+        <HBox>
+          <children>
+            <Button fx:id="btnMinimize" styleClass="wc-btn" mnemonicParsing="false">
+              <graphic><ImageView fitWidth="12" fitHeight="12" pickOnBounds="true" preserveRatio="true">
+                <image><Image url="@icons/icon_wc_minimize.png" /></image>
+              </ImageView></graphic>
+              <tooltip><Tooltip text="Minimize" /></tooltip>
+            </Button>
+            <Button fx:id="btnMaximize" styleClass="wc-btn" mnemonicParsing="false">
+              <graphic><ImageView fitWidth="12" fitHeight="12" pickOnBounds="true" preserveRatio="true">
+                <image><Image url="@icons/icon_wc_maximize.png" /></image>
+              </ImageView></graphic>
+              <tooltip><Tooltip text="Maximize" /></tooltip>
+            </Button>
+            <Button fx:id="btnClose" styleClass="wc-btn,wc-close" mnemonicParsing="false">
+              <graphic><ImageView fitWidth="12" fitHeight="12" pickOnBounds="true" preserveRatio="true">
+                <image><Image url="@icons/icon_wc_close.png" /></image>
+              </ImageView></graphic>
+              <tooltip><Tooltip text="Close" /></tooltip>
+            </Button>
+          </children>
+        </HBox>
+      </trailing>
+    </HeaderBar>
+
+    <!-- â”€â”€ CONTENT AREA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <StackPane VBox.vgrow="ALWAYS" style="-fx-background-color: #1e1e1e;">
+      <children>
+
+        <!-- CONVERT PAGE -->
+        <VBox fx:id="pageConvert" spacing="12.0" style="-fx-padding: 14 16 10 16; -fx-background-color: #1e1e1e;">
+          <children>
+            <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+              <children>
+
+                <!-- SOURCE COLUMN -->
+                <VBox spacing="8.0" HBox.hgrow="ALWAYS" prefWidth="0.0" minWidth="0.0">
+                  <children>
+                    <HBox alignment="CENTER_LEFT" spacing="8.0" minHeight="32.0">
+                      <children>
+                        <Button fx:id="openFileButton" styleClass="secondary-button" mnemonicParsing="false" text="Browse">
+                          <graphic><ImageView fitWidth="15" fitHeight="15" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@icons/icon_open.png" /></image>
+                          </ImageView></graphic>
+                          <tooltip><Tooltip text="Open File" /></tooltip>
+                        </Button>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="fromCombo" prefWidth="175.0" />
+                      </children>
+                    </HBox>
+                    <CodeArea fx:id="sourceCodeArea" styleClass="styled-text-area" wrapText="true" VBox.vgrow="ALWAYS" />
+                  </children>
+                </VBox>
+
+                <!-- CENTER COLUMN -->
+                <VBox spacing="8.0" minWidth="46.0">
+                  <children>
+                    <HBox alignment="CENTER">
+                      <children>
+                        <Button fx:id="swapButton" styleClass="icon-button" mnemonicParsing="false">
+                          <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@icons/icon_swap.png" /></image>
+                          </ImageView></graphic>
+                          <tooltip><Tooltip text="Swap" /></tooltip>
+                        </Button>
+                      </children>
+                    </HBox>
+                    <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                      <children>
+                        <Button fx:id="convertButton" onAction="#handleConvert" styleClass="convert-icon-button" mnemonicParsing="false">
+                          <graphic><ImageView fitWidth="20" fitHeight="20" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@icons/icon_convert.png" /></image>
+                          </ImageView></graphic>
+                          <tooltip><Tooltip text="Convert" /></tooltip>
+                        </Button>
+                      </children>
+                    </VBox>
+                  </children>
+                </VBox>
+
+                <!-- TARGET COLUMN -->
+                <VBox spacing="8.0" HBox.hgrow="ALWAYS" prefWidth="0.0" minWidth="0.0">
+                  <children>
+                    <HBox alignment="CENTER_LEFT" spacing="8.0" minHeight="32.0">
+                      <children>
+                        <ComboBox fx:id="toCombo" prefWidth="175.0" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="previewButton" styleClass="icon-button" mnemonicParsing="false" visible="false">
+                          <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@icons/icon_preview.png" /></image>
+                          </ImageView></graphic>
+                          <tooltip><Tooltip text="Preview UI" /></tooltip>
+                        </Button>
+                        <Button fx:id="copyButton" styleClass="icon-button" mnemonicParsing="false">
+                          <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@icons/icon_copy.png" /></image>
+                          </ImageView></graphic>
+                          <tooltip><Tooltip text="Copy to Clipboard" /></tooltip>
+                        </Button>
+                        <Button fx:id="saveAsButton" styleClass="icon-button" mnemonicParsing="false">
+                          <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                            <image><Image url="@icons/icon_save.png" /></image>
+                          </ImageView></graphic>
+                          <tooltip><Tooltip text="Save As" /></tooltip>
+                        </Button>
+                      </children>
+                    </HBox>
+                    <CodeArea fx:id="targetCodeArea" styleClass="styled-text-area" editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
+                  </children>
+                </VBox>
+
+              </children>
+            </HBox>
+            <Label fx:id="statusLabel" styleClass="status-text" text="Ready" />
+          </children>
+        </VBox>
+
+        <!-- SETTINGS PAGE -->
+        <VBox fx:id="pageSettings" visible="false" managed="false" VBox.vgrow="ALWAYS"
+              style="-fx-background-color: #1e1e1e;">
+          <children>
+          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                      VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: #1e1e1e; -fx-background: #1e1e1e; -fx-border-color: transparent;">
+            <content>
+            <VBox spacing="20" style="-fx-padding: 28 32 28 32;">
+          <children>
+            <HBox alignment="CENTER_LEFT">
+              <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label styleClass="settings-title" text="Conversion Settings" />
+                <Label styleClass="settings-subtitle" text="These apply whenever you convert, regardless of which frameworks you're working with." />
+              </VBox>
+              <Button fx:id="settingsResetBtn" styleClass="secondary-button" mnemonicParsing="false" text="Reset to Defaults">
+                <tooltip><Tooltip text="Clear all settings back to their defaults" /></tooltip>
+              </Button>
+            </HBox>
+            <Separator />
+
+            <!-- FONTS CARD -->
+            <VBox styleClass="settings-card" spacing="16">
+              <Label styleClass="settings-section-label" text="FONTS" />
+
+              <VBox spacing="5">
+                <CheckBox fx:id="matchDefaultFontCheck"
+                    text="Carry over the source framework's default font" />
+                <Label styleClass="settings-hint" wrapText="true"
+                    text="Uses the source framework's default font (e.g. Segoe UI from WinForms) when no font is explicitly set." />
+              </VBox>
+
+            </VBox>
+
+            <!-- WINFORMS CARD -->
+            <VBox styleClass="settings-card" spacing="16">
+              <Label styleClass="settings-section-label" text="WINFORMS" />
+
+              <VBox spacing="5">
+                <CheckBox fx:id="wfPanelNestCheck"
+                    text="Use panel nesting to replicate JavaFX TextBox appearance" />
+                <Label styleClass="settings-hint" wrapText="true"
+                    text="Wraps text inputs in nested panels to better replicate JavaFX border and fill styling in WinForms." />
+              </VBox>
+
+            </VBox>
+
+            <!-- AI CARD -->
+            <VBox styleClass="settings-card" spacing="16">
+              <Label styleClass="settings-section-label" text="AI" />
+
+              <VBox spacing="8">
+                <Label styleClass="settings-field-label" text="Gemini API Key" />
+                <HBox spacing="6" alignment="CENTER_LEFT">
+                  <StackPane HBox.hgrow="ALWAYS">
+                    <PasswordField fx:id="aiApiKeyPasswordField"
+                        styleClass="settings-input"
+                        promptText="Paste your Gemini API key…" />
+                    <TextField fx:id="aiApiKeyTextField"
+                        styleClass="settings-input"
+                        promptText="Paste your Gemini API key…"
+                        visible="false" managed="false" />
+                  </StackPane>
+                  <Button fx:id="aiApiKeyRevealBtn" styleClass="icon-button" mnemonicParsing="false">
+                    <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                      <image><Image url="@icons/icon_preview.png" /></image>
+                    </ImageView></graphic>
+                    <tooltip><Tooltip text="Show / Hide key" /></tooltip>
+                  </Button>
+                </HBox>
+                <Label styleClass="settings-hint" wrapText="true" style="-fx-padding: 0;"
+                    text="Saved locally in ~/.uiporter/settings.properties. Only sent to the Gemini API." />
+              </VBox>
+
+              <VBox spacing="8">
+                <Label styleClass="settings-field-label" text="AI Model" />
+                <ComboBox fx:id="aiModelComboBox" styleClass="settings-input" maxWidth="Infinity" />
+              </VBox>
+
+            </VBox>
+
+
+          </children>
+            </VBox>
+            </content>
+          </ScrollPane>
+          </children>
+        </VBox>
+
+        <!-- AI PAGE -->
+        <VBox fx:id="pageAI" visible="false" managed="false" spacing="0"
+              style="-fx-background-color: #1e1e1e;">
+
+          <!-- AI Sub-Tab Bar -->
+          <HBox styleClass="ai-sub-tab-bar" VBox.vgrow="NEVER">
+            <children>
+              <Button fx:id="aiTabImageBtn" text="Image to UI" styleClass="ai-sub-tab-btn,ai-sub-tab-btn-selected" mnemonicParsing="false">
+                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                  <image><Image url="@icons/icon_ai_image.png" /></image>
+                </ImageView></graphic>
+              </Button>
+              <Button fx:id="aiTabImproveBtn" text="Improve UI" styleClass="ai-sub-tab-btn" mnemonicParsing="false">
+                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                  <image><Image url="@icons/icon_ai_improve.png" /></image>
+                </ImageView></graphic>
+              </Button>
+              <Button fx:id="aiTabConsoleBtn" text="Console to GUI" styleClass="ai-sub-tab-btn" mnemonicParsing="false">
+                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                  <image><Image url="@icons/icon_ai_console.png" /></image>
+                </ImageView></graphic>
+              </Button>
+              <Button fx:id="aiTabPromptBtn" text="Prompt to UI" styleClass="ai-sub-tab-btn" mnemonicParsing="false">
+                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                  <image><Image url="@icons/icon_ai_prompt.png" /></image>
+                </ImageView></graphic>
+              </Button>
+            </children>
+          </HBox>
+
+          <!-- AI Sub-Pages Stack -->
+          <StackPane VBox.vgrow="ALWAYS">
+            <children>
+
+              <!-- ── IMAGE→UI ──────────────────────────────────────────────── -->
+              <VBox fx:id="aiPageImage" spacing="10.0"
+                    style="-fx-padding: 14 16 10 16; -fx-background-color: #1e1e1e;">
+                <children>
+                  <!-- Browse row -->
+                  <HBox spacing="8.0" alignment="CENTER_LEFT">
+                    <children>
+                      <Button fx:id="aiImageBrowseBtn" styleClass="secondary-button" mnemonicParsing="false" text="Browse Image">
+                        <graphic><ImageView fitWidth="15" fitHeight="15" pickOnBounds="true" preserveRatio="true">
+                          <image><Image url="@icons/icon_open.png" /></image>
+                        </ImageView></graphic>
+                        <tooltip><Tooltip text="Select UI screenshot" /></tooltip>
+                      </Button>
+                      <TextField fx:id="aiImagePathField" styleClass="ai-instruction-field"
+                                 promptText="Select a UI screenshot…" HBox.hgrow="ALWAYS" />
+                    </children>
+                  </HBox>
+                  <!-- Instructions row -->
+                  <HBox spacing="8.0" alignment="CENTER_LEFT" minHeight="36.0">
+                    <children>
+                      <Label text="Instructions:" styleClass="panel-label" minWidth="90.0" />
+                      <TextField fx:id="aiImageInstructField" styleClass="ai-instruction-field"
+                                 promptText="e.g. Make it dark mode, add a sidebar…" HBox.hgrow="ALWAYS" />
+                    </children>
+                  </HBox>
+                  <!-- Generate button -->
+                  <Button fx:id="aiImageGenerateBtn" text="Generate"
+                          styleClass="ai-generate-btn" mnemonicParsing="false" maxWidth="Infinity">
+                    <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                      <image><Image url="@icons/icon_ai_generate.png" /></image>
+                    </ImageView></graphic>
+                  </Button>
+                  <!-- Output area -->
+                  <VBox spacing="6.0" VBox.vgrow="ALWAYS">
+                    <children>
+                      <HBox alignment="CENTER_LEFT" spacing="4.0">
+                        <children>
+                          <Label text="OUTPUT" styleClass="panel-label" />
+                          <Region HBox.hgrow="ALWAYS" />
+                          <Button fx:id="aiImageCopyBtn" styleClass="icon-button" mnemonicParsing="false">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                              <image><Image url="@icons/icon_copy.png" /></image>
+                            </ImageView></graphic>
+                            <tooltip><Tooltip text="Copy to Clipboard" /></tooltip>
+                          </Button>
+                          <Button fx:id="aiImageSaveBtn" styleClass="icon-button" mnemonicParsing="false">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                              <image><Image url="@icons/icon_save.png" /></image>
+                            </ImageView></graphic>
+                            <tooltip><Tooltip text="Save As…" /></tooltip>
+                          </Button>
+                          <Button fx:id="aiImagePreviewBtn" styleClass="icon-button" mnemonicParsing="false">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                              <image><Image url="@icons/icon_preview.png" /></image>
+                            </ImageView></graphic>
+                            <tooltip><Tooltip text="Preview UI" /></tooltip>
+                          </Button>
+                        </children>
+                      </HBox>
+                      <CodeArea fx:id="aiImageOutput" styleClass="styled-text-area"
+                                editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
+                    </children>
+                  </VBox>
+                </children>
+              </VBox>
+
+              <!-- ── IMPROVE UI ─────────────────────────────────────────────── -->
+              <VBox fx:id="aiPageImprove" visible="false" managed="false" spacing="12.0"
+                    style="-fx-padding: 14 16 10 16; -fx-background-color: #1e1e1e;">
+                <children>
+                  <!-- Instruction row -->
+                  <HBox spacing="8.0" alignment="CENTER_LEFT" minHeight="36.0">
+                    <children>
+                      <Label text="Focus:" styleClass="panel-label" minWidth="90.0" />
+                      <TextField fx:id="aiImproveInstructField" styleClass="ai-instruction-field"
+                                 promptText="Optional: specific improvements to make…" HBox.hgrow="ALWAYS" />
+                    </children>
+                  </HBox>
+                  <!-- Split pane -->
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                    <children>
+                      <!-- Source column -->
+                      <VBox spacing="8.0" HBox.hgrow="ALWAYS" prefWidth="0.0" minWidth="0.0">
+                        <children>
+                          <HBox alignment="CENTER_LEFT" minHeight="30.0" spacing="8.0">
+                            <children>
+                              <Label text="EXISTING UI CODE" styleClass="panel-label" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="aiImproveBrowseBtn" styleClass="secondary-button" mnemonicParsing="false" text="Browse">
+                                <graphic><ImageView fitWidth="15" fitHeight="15" pickOnBounds="true" preserveRatio="true">
+                                  <image><Image url="@icons/icon_open.png" /></image>
+                                </ImageView></graphic>
+                                <tooltip><Tooltip text="Open Java file" /></tooltip>
+                              </Button>
+                            </children>
+                          </HBox>
+                          <CodeArea fx:id="aiImproveSourceArea" styleClass="styled-text-area"
+                                    wrapText="true" VBox.vgrow="ALWAYS" />
+                        </children>
+                      </VBox>
+                      <!-- Center column -->
+                      <VBox minWidth="46.0" maxWidth="46.0" alignment="CENTER">
+                        <children>
+                          <Button fx:id="aiImproveGenerateBtn" styleClass="convert-icon-button" mnemonicParsing="false">
+                            <graphic><ImageView fitWidth="20" fitHeight="20" pickOnBounds="true" preserveRatio="true">
+                              <image><Image url="@icons/icon_convert.png" /></image>
+                            </ImageView></graphic>
+                            <tooltip><Tooltip text="Improve UI" /></tooltip>
+                          </Button>
+                        </children>
+                      </VBox>
+                      <!-- Output column -->
+                      <VBox spacing="8.0" HBox.hgrow="ALWAYS" prefWidth="0.0" minWidth="0.0">
+                        <children>
+                          <HBox alignment="CENTER_LEFT" spacing="4.0" minHeight="30.0">
+                            <children>
+                              <Label text="GENERATED CODE" styleClass="panel-label" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="aiImproveCopyBtn" styleClass="icon-button" mnemonicParsing="false">
+                                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                                  <image><Image url="@icons/icon_copy.png" /></image>
+                                </ImageView></graphic>
+                                <tooltip><Tooltip text="Copy to Clipboard" /></tooltip>
+                              </Button>
+                              <Button fx:id="aiImproveSaveBtn" styleClass="icon-button" mnemonicParsing="false">
+                                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                                  <image><Image url="@icons/icon_save.png" /></image>
+                                </ImageView></graphic>
+                                <tooltip><Tooltip text="Save As…" /></tooltip>
+                              </Button>
+                              <Button fx:id="aiImprovePreviewBtn" styleClass="icon-button" mnemonicParsing="false">
+                                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                                  <image><Image url="@icons/icon_preview.png" /></image>
+                                </ImageView></graphic>
+                                <tooltip><Tooltip text="Preview UI" /></tooltip>
+                              </Button>
+                            </children>
+                          </HBox>
+                          <CodeArea fx:id="aiImproveOutput" styleClass="styled-text-area"
+                                    editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
+                        </children>
+                      </VBox>
+                    </children>
+                  </HBox>
+                </children>
+              </VBox>
+
+              <!-- ── CONSOLE→GUI ─────────────────────────────────────────────── -->
+              <VBox fx:id="aiPageConsole" visible="false" managed="false" spacing="12.0"
+                    style="-fx-padding: 14 16 10 16; -fx-background-color: #1e1e1e;">
+                <children>
+                  <!-- Instruction row -->
+                  <HBox spacing="8.0" alignment="CENTER_LEFT" minHeight="36.0">
+                    <children>
+                      <Label text="Instructions:" styleClass="panel-label" minWidth="90.0" />
+                      <TextField fx:id="aiConsoleInstructField" styleClass="ai-instruction-field"
+                                 promptText="Optional: styling or layout instructions…" HBox.hgrow="ALWAYS" />
+                    </children>
+                  </HBox>
+                  <!-- Split pane -->
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                    <children>
+                      <!-- Source column -->
+                      <VBox spacing="8.0" HBox.hgrow="ALWAYS" prefWidth="0.0" minWidth="0.0">
+                        <children>
+                          <HBox alignment="CENTER_LEFT" minHeight="30.0" spacing="8.0">
+                            <children>
+                              <Label text="CONSOLE APP CODE" styleClass="panel-label" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="aiConsoleBrowseBtn" styleClass="secondary-button" mnemonicParsing="false" text="Browse">
+                                <graphic><ImageView fitWidth="15" fitHeight="15" pickOnBounds="true" preserveRatio="true">
+                                  <image><Image url="@icons/icon_open.png" /></image>
+                                </ImageView></graphic>
+                                <tooltip><Tooltip text="Open Java file" /></tooltip>
+                              </Button>
+                            </children>
+                          </HBox>
+                          <CodeArea fx:id="aiConsoleSourceArea" styleClass="styled-text-area"
+                                    wrapText="true" VBox.vgrow="ALWAYS" />
+                        </children>
+                      </VBox>
+                      <!-- Center column -->
+                      <VBox minWidth="46.0" maxWidth="46.0" alignment="CENTER">
+                        <children>
+                          <Button fx:id="aiConsoleGenerateBtn" styleClass="convert-icon-button" mnemonicParsing="false">
+                            <graphic><ImageView fitWidth="20" fitHeight="20" pickOnBounds="true" preserveRatio="true">
+                              <image><Image url="@icons/icon_convert.png" /></image>
+                            </ImageView></graphic>
+                            <tooltip><Tooltip text="Convert to GUI" /></tooltip>
+                          </Button>
+                        </children>
+                      </VBox>
+                      <!-- Output column -->
+                      <VBox spacing="8.0" HBox.hgrow="ALWAYS" prefWidth="0.0" minWidth="0.0">
+                        <children>
+                          <HBox alignment="CENTER_LEFT" spacing="4.0" minHeight="30.0">
+                            <children>
+                              <Label text="GENERATED CODE" styleClass="panel-label" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="aiConsoleCopyBtn" styleClass="icon-button" mnemonicParsing="false">
+                                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                                  <image><Image url="@icons/icon_copy.png" /></image>
+                                </ImageView></graphic>
+                                <tooltip><Tooltip text="Copy to Clipboard" /></tooltip>
+                              </Button>
+                              <Button fx:id="aiConsoleSaveBtn" styleClass="icon-button" mnemonicParsing="false">
+                                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                                  <image><Image url="@icons/icon_save.png" /></image>
+                                </ImageView></graphic>
+                                <tooltip><Tooltip text="Save As…" /></tooltip>
+                              </Button>
+                              <Button fx:id="aiConsolePreviewBtn" styleClass="icon-button" mnemonicParsing="false">
+                                <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                                  <image><Image url="@icons/icon_preview.png" /></image>
+                                </ImageView></graphic>
+                                <tooltip><Tooltip text="Preview UI" /></tooltip>
+                              </Button>
+                            </children>
+                          </HBox>
+                          <CodeArea fx:id="aiConsoleOutput" styleClass="styled-text-area"
+                                    editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
+                        </children>
+                      </VBox>
+                    </children>
+                  </HBox>
+                </children>
+              </VBox>
+
+              <!-- ── PROMPT→UI ──────────────────────────────────────────────── -->
+              <VBox fx:id="aiPagePrompt" visible="false" managed="false" spacing="10.0"
+                    style="-fx-padding: 14 16 10 16; -fx-background-color: #1e1e1e;">
+                <children>
+                  <Label text="DESCRIBE THE UI TO BUILD" styleClass="panel-label" />
+                  <TextArea fx:id="aiPromptTextArea" styleClass="ai-plain-textarea"
+                            prefHeight="150.0" wrapText="true"
+                            promptText="e.g. A login screen with a blue gradient background, username, password fields, and a rounded login button." />
+                  <Button fx:id="aiPromptGenerateBtn" text="Generate"
+                          styleClass="ai-generate-btn" mnemonicParsing="false" maxWidth="Infinity">
+                    <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                      <image><Image url="@icons/icon_ai_generate.png" /></image>
+                    </ImageView></graphic>
+                  </Button>
+                  <!-- Output area -->
+                  <VBox spacing="6.0" VBox.vgrow="ALWAYS">
+                    <children>
+                      <HBox alignment="CENTER_LEFT" spacing="4.0">
+                        <children>
+                          <Label text="OUTPUT" styleClass="panel-label" />
+                          <Region HBox.hgrow="ALWAYS" />
+                          <Button fx:id="aiPromptCopyBtn" styleClass="icon-button" mnemonicParsing="false">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                              <image><Image url="@icons/icon_copy.png" /></image>
+                            </ImageView></graphic>
+                            <tooltip><Tooltip text="Copy to Clipboard" /></tooltip>
+                          </Button>
+                          <Button fx:id="aiPromptSaveBtn" styleClass="icon-button" mnemonicParsing="false">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                              <image><Image url="@icons/icon_save.png" /></image>
+                            </ImageView></graphic>
+                            <tooltip><Tooltip text="Save As…" /></tooltip>
+                          </Button>
+                          <Button fx:id="aiPromptPreviewBtn" styleClass="icon-button" mnemonicParsing="false">
+                            <graphic><ImageView fitWidth="16" fitHeight="16" pickOnBounds="true" preserveRatio="true">
+                              <image><Image url="@icons/icon_preview.png" /></image>
+                            </ImageView></graphic>
+                            <tooltip><Tooltip text="Preview UI" /></tooltip>
+                          </Button>
+                        </children>
+                      </HBox>
+                      <CodeArea fx:id="aiPromptOutput" styleClass="styled-text-area"
+                                editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
+                    </children>
+                  </VBox>
+                </children>
+              </VBox>
+
+            </children>
+          </StackPane>
+
+          <!-- AI Status bar -->
+          <Label fx:id="aiStatusLabel" styleClass="status-text" text="Ready"
+                 style="-fx-padding: 0 16 10 16;" />
+
+        </VBox>
+
+      </children>
+    </StackPane>
+
+  </children>
+</VBox>

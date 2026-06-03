@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox
+   xmlns="http://javafx.com/javafx"
+   xmlns:fx="http://javafx.com/fxml"
+    fx:id="root"
+    prefWidth="450"
+    prefHeight="300"
+    spacing="25"
+    alignment="CENTER"
+    style="-fx-background-color: #FFFFFF;">
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+    <children>
+        <Label
+            fx:id="titleLabel"
+            text="OOP"
+            style="-fx-text-fill: #2C3E50; -fx-font-family: 'Segoe UI'; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+        <Label
+            fx:id="subtitleLabel"
+            text="Object Oriented Programming"
+            style="-fx-text-fill: #7F8C8D; -fx-font-family: 'Segoe UI'; -fx-font-size: 14px;"/>
+        <Slider
+            fx:id="mainSlider"
+            prefWidth="250"
+            min="0"
+            max="100"
+            value="50">
+            <padding>
+                <Insets top="10" right="0" bottom="10" left="0"/>
+            </padding>
+        </Slider>
+        <Button
+            fx:id="actionButton"
+            text="OK"
+            style="-fx-background-color: #3498DB; -fx-text-fill: #FFFFFF; -fx-background-radius: 6px; -fx-border-radius: 6px; -fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;">
+            <padding>
+                <Insets top="10" right="24" bottom="10" left="24"/>
+            </padding>
+        </Button>
+    </children>
+</VBox>

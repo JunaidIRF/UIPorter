@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import java.lang.String?>
+
+<StackPane
+   xmlns="http://javafx.com/javafx"
+   xmlns:fx="http://javafx.com/fxml"
+    fx:id="root"
+    prefWidth="1280"
+    prefHeight="850"
+    style="-fx-background-color: #0b090a;">
+    <stylesheets>
+        <String fx:value="data:text/css,.glass-panel {    -fx-background-color: rgba(255, 255, 255, 0.05);    -fx-background-radius: 15;    -fx-border-color: rgba(255, 255, 255, 0.1);    -fx-border-radius: 15;    -fx-border-width: 1;}.sidebar-btn {    -fx-background-color: transparent;    -fx-text-fill: #adb5bd;    -fx-alignment: CENTER_LEFT;    -fx-padding: 12 20;    -fx-font-size: 14;    -fx-cursor: hand;    -fx-background-radius: 10;}.sidebar-btn:hover {    -fx-background-color: rgba(255, 255, 255, 0.08);    -fx-text-fill: white;}.sidebar-btn-active {    -fx-background-color: #7209b7;    -fx-text-fill: white;}.search-box {    -fx-background-color: rgba(255, 255, 255, 0.08);    -fx-background-radius: 20;    -fx-text-fill: white;    -fx-padding: 8 15;    -fx-border-color: transparent;}.upgrade-card {    -fx-background-color: linear-gradient(to bottom right, #7209b7, #3f37c9);    -fx-background-radius: 15;    -fx-padding: 20;}.upgrade-card Label {    -fx-text-fill: white;}.upgrade-card Button {    -fx-background-color: white;    -fx-text-fill: #7209b7;    -fx-font-weight: bold;    -fx-background-radius: 10;    -fx-padding: 8 15;}.table-view {    -fx-background-color: transparent;    -fx-base: transparent;    -fx-control-inner-background: transparent;}.table-view .column-header-background {    -fx-background-color: rgba(255, 255, 255, 0.05);}.table-view .column-header {    -fx-background-color: transparent;}.table-view .cell {    -fx-text-fill: white;    -fx-border-color: transparent;}.table-row-cell:odd {    -fx-background-color: rgba(255, 255, 255, 0.02);}.progress-bar {    -fx-accent: #4cc9f0;}.progress-bar .track {    -fx-background-color: rgba(255, 255, 255, 0.1);    -fx-background-radius: 5;}.check-box {    -fx-text-fill: #adb5bd;}.check-box .box {    -fx-background-color: rgba(255, 255, 255, 0.1);}.action-btn {    -fx-background-color: #f72585;    -fx-text-fill: white;    -fx-font-weight: bold;    -fx-padding: 15;    -fx-background-radius: 10;    -fx-cursor: hand;}.chart-plot-background {    -fx-background-color: transparent;}.chart-vertical-grid-lines, .chart-horizontal-grid-lines {    -fx-stroke: rgba(255, 255, 255, 0.05);}.axis {    -fx-tick-label-fill: #adb5bd;}.default-color0.chart-series-line {    -fx-stroke: #7209b7;}.default-color0.chart-line-symbol {    -fx-background-color: #7209b7, white;}"/>
+    </stylesheets>
+    <children>
+        <Canvas
+            fx:id="canvas"/>
+        <BorderPane
+            fx:id="mainLayout">
+            <padding>
+                <Insets topRightBottomLeft="20"/>
+            </padding>
+            <left>
+                <VBox
+                    fx:id="sidebar"
+                    prefWidth="240"
+                    spacing="15"
+                    styleClass="glass-panel">
+                    <padding>
+                        <Insets top="30" right="15" bottom="30" left="15"/>
+                    </padding>
+                    <children>
+                        <Label
+                            fx:id="sidebar_c0"
+                            text="NEBULA"
+                            style="-fx-text-fill: white; -fx-font-size: 28pt; -fx-font-weight: bold;">
+                            <padding>
+                                <Insets top="0" right="0" bottom="30" left="0"/>
+                            </padding>
+                        </Label>
+                        <Button
+                            fx:id="sidebar_c1"
+                            text="Dashboard"/>
+                        <Button
+                            fx:id="sidebar_c2"
+                            text="Analytics"/>
+                        <Button
+                            fx:id="sidebar_c3"
+                            text="Project Map"/>
+                        <Button
+                            fx:id="sidebar_c4"
+                            text="Team"/>
+                        <Button
+                            fx:id="sidebar_c5"
+                            text="Cloud Storage"/>
+                        <Button
+                            fx:id="sidebar_c6"
+                            text="Settings"/>
+                        <Region
+                            fx:id="sidebar_c7"/>
+                        <VBox
+                            fx:id="sidebar_c8"
+                            spacing="10"
+                            styleClass="upgrade-card">
+                            <children>
+                                <Label
+                                    fx:id="sidebar_c8_c0"
+                                    text="PRO PLAN"/>
+                                <Label
+                                    fx:id="sidebar_c8_c1"
+                                    text="Get unlimited access to AI tools"/>
+                                <Button
+                                    fx:id="sidebar_c8_c2"
+                                    text="Upgrade Now"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </left>
+            <center>
+                <ScrollPane
+                    fx:id="scrollPane"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+                    <padding>
+                        <Insets top="0" right="0" bottom="0" left="20"/>
+                    </padding>
+                    <content>
+                        <VBox
+                            fx:id="content"
+                            spacing="25">
+                            <padding>
+                                <Insets top="0" right="20" bottom="0" left="0"/>
+                            </padding>
+                            <children>
+                                <HBox
+                                    fx:id="createHeader_header"
+                                    spacing="20"
+                                    alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label
+                                            fx:id="createHeader_title"
+                                            text="Enterprise Overview"
+                                            style="-fx-text-fill: white; -fx-font-size: 24pt; -fx-font-weight: bold;"/>
+                                        <Region
+                                            fx:id="createHeader_spacer"
+                                            HBox.hgrow="ALWAYS"/>
+                                        <TextField
+                                            fx:id="createHeader_search"
+                                            promptText="Search anything..."
+                                            prefWidth="300"
+                                            styleClass="search-box"/>
+                                        <Circle
+                                            fx:id="createHeader_avatar"
+                                            fill="#7209b7"
+                                            stroke="#FFFFFF"
+                                            strokeWidth="2"/>
+                                    </children>
+                                </HBox>
+                                <HBox
+                                    fx:id="statsRow"
+                                    spacing="20">
+                                    <children>
+                                        <VBox
+                                            fx:id="createStatCard_card"
+                                            prefWidth="280"
+                                            spacing="8"
+                                            styleClass="glass-panel">
+                                            <padding>
+                                                <Insets topRightBottomLeft="20"/>
+                                            </padding>
+                                            <children>
+                                                <Label
+                                                    fx:id="createStatCard_lblTitle"
+                                                    text="Total Revenue"
+                                                    style="-fx-text-fill: #adb5bd; -fx-font-size: 14pt;"/>
+                                                <Label
+                                                    fx:id="createStatCard_lblVal"
+                                                    text="\$124,592"
+                                                    style="-fx-text-fill: white; -fx-font-size: 24pt; -fx-font-weight: bold;"/>
+                                                <Label
+                                                    fx:id="createStatCard_lblTrend"
+                                                    text="+12.5%"
+                                                    style="-fx-font-weight: bold;"/>
+                                                <Rectangle
+                                                    fx:id="createStatCard_bar"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox
+                                            fx:id="createStatCard_card_1"
+                                            prefWidth="280"
+                                            spacing="8"
+                                            styleClass="glass-panel">
+                                            <padding>
+                                                <Insets topRightBottomLeft="20"/>
+                                            </padding>
+                                            <children>
+                                                <Label
+                                                    fx:id="createStatCard_card_1_c0"
+                                                    text="Active Users"
+                                                    style="-fx-text-fill: #adb5bd; -fx-font-size: 14pt;"/>
+                                                <Label
+                                                    fx:id="createStatCard_card_1_c1"
+                                                    text="12,843"
+                                                    style="-fx-text-fill: white; -fx-font-size: 24pt; -fx-font-weight: bold;"/>
+                                                <Label
+                                                    fx:id="createStatCard_card_1_c2"
+                                                    text="+5.2%"
+                                                    style="-fx-font-weight: bold;"/>
+                                                <Rectangle
+                                                    fx:id="createStatCard_card_1_c3"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox
+                                            fx:id="createStatCard_card_2"
+                                            prefWidth="280"
+                                            spacing="8"
+                                            styleClass="glass-panel">
+                                            <padding>
+                                                <Insets topRightBottomLeft="20"/>
+                                            </padding>
+                                            <children>
+                                                <Label
+                                                    fx:id="createStatCard_card_2_c0"
+                                                    text="Conversion"
+                                                    style="-fx-text-fill: #adb5bd; -fx-font-size: 14pt;"/>
+                                                <Label
+                                                    fx:id="createStatCard_card_2_c1"
+                                                    text="3.8%"
+                                                    style="-fx-text-fill: white; -fx-font-size: 24pt; -fx-font-weight: bold;"/>
+                                                <Label
+                                                    fx:id="createStatCard_card_2_c2"
+                                                    text="-1.1%"
+                                                    style="-fx-font-weight: bold;"/>
+                                                <Rectangle
+                                                    fx:id="createStatCard_card_2_c3"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox
+                                            fx:id="createStatCard_card_3"
+                                            prefWidth="280"
+                                            spacing="8"
+                                            styleClass="glass-panel">
+                                            <padding>
+                                                <Insets topRightBottomLeft="20"/>
+                                            </padding>
+                                            <children>
+                                                <Label
+                                                    fx:id="createStatCard_card_3_c0"
+                                                    text="System Load"
+                                                    style="-fx-text-fill: #adb5bd; -fx-font-size: 14pt;"/>
+                                                <Label
+                                                    fx:id="createStatCard_card_3_c1"
+                                                    text="42%"
+                                                    style="-fx-text-fill: white; -fx-font-size: 24pt; -fx-font-weight: bold;"/>
+                                                <Label
+                                                    fx:id="createStatCard_card_3_c2"
+                                                    text="Stable"
+                                                    style="-fx-font-weight: bold;"/>
+                                                <Rectangle
+                                                    fx:id="createStatCard_card_3_c3"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                                <HBox
+                                    fx:id="chartRow"
+                                    spacing="20">
+                                    <children>
+                                        <StackPane
+                                            fx:id="createLineChart_container"
+                                            styleClass="glass-panel"
+                                            HBox.hgrow="ALWAYS">
+                                            <padding>
+                                                <Insets topRightBottomLeft="10"/>
+                                            </padding>
+                                            <children>
+                                                <LineChart
+                                                    fx:id="createLineChart_lineChart">
+                                                    <xAxis>
+                                                        <CategoryAxis/>
+                                                    </xAxis>
+                                                    <yAxis>
+                                                        <NumberAxis/>
+                                                    </yAxis>
+                                                </LineChart>
+                                            </children>
+                                        </StackPane>
+                                        <StackPane
+                                            fx:id="createPieChart_container"
+                                            styleClass="glass-panel">
+                                            <padding>
+                                                <Insets topRightBottomLeft="10"/>
+                                            </padding>
+                                            <children>
+                                                <PieChart
+                                                    fx:id="createPieChart_pieChart"
+                                                    prefWidth="350"/>
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </HBox>
+                                <HBox
+                                    fx:id="bottomRow"
+                                    spacing="20">
+                                    <children>
+                                        <VBox
+                                            fx:id="createProjectTable_container"
+                                            spacing="15"
+                                            styleClass="glass-panel"
+                                            HBox.hgrow="ALWAYS">
+                                            <padding>
+                                                <Insets topRightBottomLeft="20"/>
+                                            </padding>
+                                            <children>
+                                                <Label
+                                                    fx:id="createProjectTable_title"
+                                                    text="Recent Projects"
+                                                    style="-fx-text-fill: white; -fx-font-size: 18pt; -fx-font-weight: bold;"/>
+                                                <TableView
+                                                    fx:id="createProjectTable_table"
+                                                    prefHeight="250"
+                                                    maxHeight="250"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox
+                                            fx:id="createControlsPanel_container"
+                                            prefWidth="350"
+                                            spacing="20"
+                                            styleClass="glass-panel">
+                                            <padding>
+                                                <Insets topRightBottomLeft="20"/>
+                                            </padding>
+                                            <children>
+                                                <Label
+                                                    fx:id="createControlsPanel_title"
+                                                    text="System Controls"
+                                                    style="-fx-text-fill: white; -fx-font-size: 18pt; -fx-font-weight: bold;"/>
+                                                <Label
+                                                    fx:id="createControlsPanel_sliderVal"
+                                                    text="Network Throttle: 75%"
+                                                    style="-fx-text-fill: #adb5bd;"/>
+                                                <Slider
+                                                    fx:id="createControlsPanel_slider"
+                                                    min="0"
+                                                    max="100"
+                                                    value="75"/>
+                                                <CheckBox
+                                                    fx:id="createControlsPanel_c1"
+                                                    text="Enable AI Optimization"
+                                                    selected="true"/>
+                                                <CheckBox
+                                                    fx:id="createControlsPanel_c2"
+                                                    text="Hardware Acceleration"/>
+                                                <CheckBox
+                                                    fx:id="createControlsPanel_c3"
+                                                    text="Auto-Scale Nodes"/>
+                                                <Button
+                                                    fx:id="createControlsPanel_actionBtn"
+                                                    text="DEPLOY SYSTEM"
+                                                    styleClass="action-btn"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </center>
+        </BorderPane>
+    </children>
+</StackPane>

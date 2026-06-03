@@ -1,0 +1,97 @@
+@startuml UML_Class_Diagram_Part1
+
+skinparam classFontStyle bold
+skinparam classFontSize 12
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam linetype polyline
+skinparam nodesep 50
+skinparam ranksep 40
+skinparam dpi 200
+skinparam backgroundColor transparent
+
+skinparam class {
+    BackgroundColor #FEFEFE
+    BorderColor #444444
+    ArrowColor #FEFEFE
+    ArrowThickness 2
+    FontColor #000000
+}
+
+hide circle
+
+class Person #DAE8FC {
+    - name: String
+    - id: String
+    --
+    + Person(name, id)
+    + getName(): String
+    + getId(): String
+    + toString(): String
+    + equals(Object): boolean
+}
+
+together {
+    class Student #D5E8D4 {
+        - gpa: double
+        - department: Department
+        - courses: ArrayList<Course>
+        --
+        + Student(name, id, gpa, department)
+        + getGpa(): double
+        + setGpa(double): void
+        + getDepartment(): Department
+        + getCourses(): ArrayList<Course>
+        + enrollCourse(Course): void
+        + toString(): String
+    }
+
+    class Staff #FFF2CC {
+        - office: String
+        --
+        + Staff(name, id, office)
+        + getOffice(): String
+        + toString(): String
+    }
+
+    class Faculty #FFF2CC {
+        - rank: String
+        - department: Department
+        --
+        + Faculty(name, id, rank, department)
+        + getRank(): String
+        + getDepartment(): Department
+        + toString(): String
+    }
+}
+
+together {
+    class GraduateStudent #D5E8D4 {
+        - thesis: String
+        --
+        + GraduateStudent(name, id, gpa, department, thesis)
+        + getThesis(): String
+        + toString(): String
+    }
+
+    class UndergraduateStudent #D5E8D4 {
+        - semester: int
+        --
+        + UndergraduateStudent(name, id, gpa, department, semester)
+        + getSemester(): int
+        + toString(): String
+    }
+}
+
+Person <-- Student
+Person <-- Staff
+Person <-- Faculty
+
+Student <-- GraduateStudent
+Student <-- UndergraduateStudent
+
+Student -[hidden]right- Staff
+Staff -[hidden]right- Faculty
+GraduateStudent -[hidden]right- UndergraduateStudent
+
+@enduml

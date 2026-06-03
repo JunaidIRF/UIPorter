@@ -1,0 +1,40 @@
+# Maven build output
+target/
+
+# Bundled release (contains full JRE runtime ~177 MB)
+release/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+nbproject/private/
+
+# NetBeans
+nb-configuration.xml
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# AI assistant / agent files
+.claude/
+.gemini/
+.antigravity/
+.cursor/
+
+# Large zip archives (keep source clean)
+UIPorter-source.zip
+UIPorter-source2.zip
+forReportStuff.zip
+UI Porter_finalsite.7z
+
+# Scratch / temp
+scratch/
