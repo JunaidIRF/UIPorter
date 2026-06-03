@@ -738,19 +738,19 @@ function Install() {
           <div className="step">
             <div className="n">STEP · ii</div>
             <h4>DOWNLOAD</h4>
-            <p className="desc">Go to the latest release on GitHub and grab the UIPorter setup.</p>
-            <code><a href="https://github.com/JunaidIRF/UIPorter/releases/latest" target="_blank" rel="noopener" className="step-link">github.com/Jabcodex/UIPorter/releases/latest</a></code>
+            <p className="desc">Go to the latest release on GitHub and grab the UIPorter zip.</p>
+            <code><a href="https://github.com/JunaidIRF/UIPorter/releases/latest/download/UIPorter-win.zip" target="_blank" rel="noopener" className="step-link">github.com/JunaidIRF/.../UIPorter-win.zip</a></code>
           </div>
           <div className="step">
             <div className="n">STEP · iii</div>
-            <h4>INSTALL</h4>
-            <p className="desc">Run the setup. UIPorter installs like any desktop app. Launch and convert.</p>
-            <code><a href="#install" className="step-link">UIPorter-Setup.exe → Install → Run</a></code>
+            <h4>EXTRACT & RUN</h4>
+            <p className="desc">Extract the zip anywhere. UIPorter requires no installation. Launch and convert.</p>
+            <code><a href="#install" className="step-link">Extract zip → Run UIPorter.exe</a></code>
           </div>
         </div>
 
         <div style={{ marginTop: 48 }}>
-          <a className="btn btn-primary" href="https://github.com/JunaidIRF/UIPorter/releases/latest" target="_blank" rel="noopener">
+          <a className="btn btn-primary" href="https://github.com/JunaidIRF/UIPorter/releases/latest/download/UIPorter-win.zip" target="_blank" rel="noopener">
             <GhIcon />DOWNLOAD LATEST RELEASE →
           </a>
         </div>
