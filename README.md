@@ -101,7 +101,7 @@
 
 ### Installation
 
-1. Go to [**Releases**](../../releases/latest) and download the latest `UIPorter.zip`
+1. Go to [**Releases**](../../releases/latest) and download the latest `UIPorter-win.zip`
 2. Extract the zip anywhere
 3. Open the `UIPorter/` folder
 4. Double-click **`UIPorter.exe`** - no installation or Java setup required
