@@ -16,26 +16,19 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.nio.file.Path;
 
-/**
- * JavaFX App
- */
 public class App extends Application {
 
     private static Scene scene;
 
-    /** Project root resolved at startup - used by PreviewLauncher to locate preview-runner/. */
     public static Path PROJECT_ROOT;
 
     @Override
     public void start(Stage stage) throws IOException {
-        // Resolve project root from the location of compiled classes:
-        // target/classes/  →  target/  →  project root
         try {
             Path classesDir = Path.of(App.class.getProtectionDomain()
                     .getCodeSource().getLocation().toURI());
             PROJECT_ROOT = classesDir.getParent().getParent();
         } catch (Exception ignored) {
-            // PreviewLauncher has its own fallback
         }
 
         stage.initStyle(StageStyle.EXTENDED);

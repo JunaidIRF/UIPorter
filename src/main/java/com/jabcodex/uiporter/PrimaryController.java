@@ -55,7 +55,6 @@ public class PrimaryController {
     @FXML private CheckBox matchDefaultFontCheck;
     @FXML private CheckBox wfPanelNestCheck;
 
-    // â”€â”€ Title bar / tab fields â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private HeaderBar headerBar;
     @FXML private Button tabConvertBtn;
     @FXML private Button tabSettingsBtn;
@@ -67,19 +66,16 @@ public class PrimaryController {
     @FXML private VBox pageSettings;
     @FXML private VBox pageAI;
 
-    // â”€â”€ AI sub-tab buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private Button aiTabImageBtn;
     @FXML private Button aiTabImproveBtn;
     @FXML private Button aiTabConsoleBtn;
     @FXML private Button aiTabPromptBtn;
 
-    // â”€â”€ AI sub-pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private VBox aiPageImage;
     @FXML private VBox aiPageImprove;
     @FXML private VBox aiPageConsole;
     @FXML private VBox aiPagePrompt;
 
-    // â”€â”€ AI Imageâ†’UI controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private Button    aiImageBrowseBtn;
     @FXML private TextField aiImagePathField;
     @FXML private TextField aiImageInstructField;
@@ -89,7 +85,6 @@ public class PrimaryController {
     @FXML private Button    aiImageSaveBtn;
     @FXML private Button    aiImagePreviewBtn;
 
-    // â”€â”€ AI Improve UI controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private CodeArea  aiImproveSourceArea;
     @FXML private TextField aiImproveInstructField;
     @FXML private Button    aiImproveGenerateBtn;
@@ -98,7 +93,6 @@ public class PrimaryController {
     @FXML private Button    aiImproveSaveBtn;
     @FXML private Button    aiImprovePreviewBtn;
 
-    // â”€â”€ AI Consoleâ†’GUI controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private CodeArea  aiConsoleSourceArea;
     @FXML private TextField aiConsoleInstructField;
     @FXML private Button    aiConsoleGenerateBtn;
@@ -107,7 +101,6 @@ public class PrimaryController {
     @FXML private Button    aiConsoleSaveBtn;
     @FXML private Button    aiConsolePreviewBtn;
 
-    // â”€â”€ AI Promptâ†’UI controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private TextArea  aiPromptTextArea;
     @FXML private Button    aiPromptGenerateBtn;
     @FXML private CodeArea  aiPromptOutput;
@@ -115,27 +108,22 @@ public class PrimaryController {
     @FXML private Button    aiPromptSaveBtn;
     @FXML private Button    aiPromptPreviewBtn;
 
-    // â”€â”€ AI status label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private Label aiStatusLabel;
 
-    // â”€â”€ Settings: AI API key controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private PasswordField    aiApiKeyPasswordField;
     @FXML private TextField        aiApiKeyTextField;
     @FXML private Button           aiApiKeyRevealBtn;
     @FXML private ComboBox<String> aiModelComboBox;
     @FXML private Button           settingsResetBtn;
 
-    // â”€â”€ AI Consoleâ†’GUI: browse button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @FXML private Button    aiImproveBrowseBtn;
     @FXML private Button    aiConsoleBrowseBtn;
 
-    // â”€â”€ AI mode aliases (implementation lives in AIService) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private static final String MODE_IMAGE_TO_UI   = AIService.MODE_IMAGE_TO_UI;
     private static final String MODE_IMPROVE_UI    = AIService.MODE_IMPROVE_UI;
     private static final String MODE_CONSOLE_TO_UI = AIService.MODE_CONSOLE_TO_UI;
     private static final String MODE_PROMPT_TO_UI  = AIService.MODE_PROMPT_TO_UI;
 
-    // â”€â”€ Keyword lists â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private static final String[] JAVA_KEYWORDS = {
         "abstract","assert","boolean","break","byte","case","catch","char",
@@ -178,7 +166,6 @@ public class PrimaryController {
         );
     }
 
-    // â”€â”€ Tab switching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void switchPage(Button activeBtn, VBox activePage) {
         for (Button b : new Button[]{tabConvertBtn, tabSettingsBtn, tabAIBtn}) {
@@ -193,7 +180,6 @@ public class PrimaryController {
         activePage.setManaged(true);
     }
 
-    // â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     @FXML
     public void initialize() {
@@ -206,11 +192,9 @@ public class PrimaryController {
         setupCodeArea(sourceCodeArea, false);
         setupCodeArea(targetCodeArea, true);
 
-        // Live highlighting as user types (Platform.runLater avoids span/length mismatch on rapid paste)
         sourceCodeArea.textProperty().addListener((obs, o, n) ->
             Platform.runLater(() -> applyHighlighting(sourceCodeArea, langFor(fromCombo))));
 
-        // Re-highlight on language change
         fromCombo.valueProperty().addListener((obs, o, n) ->
             applyHighlighting(sourceCodeArea, langFor(fromCombo)));
         toCombo.valueProperty().addListener((obs, o, n) ->
@@ -221,19 +205,16 @@ public class PrimaryController {
         openFileButton.setOnAction(e -> handleOpenFile());
         saveAsButton.setOnAction(e -> handleSaveAs());
 
-        // â”€â”€ Tab switching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         tabConvertBtn.setOnAction(e -> switchPage(tabConvertBtn, pageConvert));
         tabSettingsBtn.setOnAction(e -> switchPage(tabSettingsBtn, pageSettings));
         tabAIBtn.setOnAction(e -> switchPage(tabAIBtn, pageAI));
 
-        // â”€â”€ AI sub-tab switching (Imageâ†’UI selected by default) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         switchAIPage(aiTabImageBtn, aiPageImage);
         aiTabImageBtn.setOnAction(e -> switchAIPage(aiTabImageBtn, aiPageImage));
         aiTabImproveBtn.setOnAction(e -> switchAIPage(aiTabImproveBtn, aiPageImprove));
         aiTabConsoleBtn.setOnAction(e -> switchAIPage(aiTabConsoleBtn, aiPageConsole));
         aiTabPromptBtn.setOnAction(e -> switchAIPage(aiTabPromptBtn, aiPagePrompt));
 
-        // â”€â”€ AI: Image browse â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         aiImageBrowseBtn.setOnAction(e -> {
             FileChooser fc = new FileChooser();
             fc.setTitle("Select UI Screenshot");
@@ -242,7 +223,6 @@ public class PrimaryController {
             if (f != null) aiImagePathField.setText(f.getAbsolutePath());
         });
 
-        // â”€â”€ AI: Generate buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         aiImageGenerateBtn.setOnAction(e -> runAI(
                 MODE_IMAGE_TO_UI,
                 aiImagePathField.getText().trim(),
@@ -271,30 +251,24 @@ public class PrimaryController {
                 "",
                 aiPromptOutput, aiPromptGenerateBtn));
 
-        // â”€â”€ AI: Copy buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         aiImageCopyBtn.setOnAction(e -> copyToClipboardAI(aiImageOutput.getText()));
         aiImproveCopyBtn.setOnAction(e -> copyToClipboardAI(aiImproveOutput.getText()));
         aiConsoleCopyBtn.setOnAction(e -> copyToClipboardAI(aiConsoleOutput.getText()));
         aiPromptCopyBtn.setOnAction(e -> copyToClipboardAI(aiPromptOutput.getText()));
 
-        // â”€â”€ AI: Save buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         aiImageSaveBtn.setOnAction(e -> saveAIOutput(aiImageOutput.getText()));
         aiImproveSaveBtn.setOnAction(e -> saveAIOutput(aiImproveOutput.getText()));
         aiConsoleSaveBtn.setOnAction(e -> saveAIOutput(aiConsoleOutput.getText()));
         aiPromptSaveBtn.setOnAction(e -> saveAIOutput(aiPromptOutput.getText()));
-        // â”€â”€ Preview buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // Convert tab: show only when target framework is JavaFX
         updatePreviewButtonVisibility();
         toCombo.valueProperty().addListener((obs, o, n) -> updatePreviewButtonVisibility());
         previewButton.setOnAction(e -> handlePreview(targetCodeArea, statusLabel));
 
-        // AI tabs: always visible (AI always outputs JavaFX)
         aiImagePreviewBtn.setOnAction(e -> handlePreview(aiImageOutput, aiStatusLabel));
         aiImprovePreviewBtn.setOnAction(e -> handlePreview(aiImproveOutput, aiStatusLabel));
         aiConsolePreviewBtn.setOnAction(e -> handlePreview(aiConsoleOutput, aiStatusLabel));
         aiPromptPreviewBtn.setOnAction(e -> handlePreview(aiPromptOutput, aiStatusLabel));
 
-        // â”€â”€ AI: Console browse â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         aiImproveBrowseBtn.setOnAction(e -> {
             FileChooser fc = new FileChooser();
             fc.setTitle("Open UI File");
@@ -328,7 +302,6 @@ public class PrimaryController {
             }
         });
 
-        // â”€â”€ Settings: load saved values â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         matchDefaultFontCheck.setSelected(AppSettings.getBool("matchDefaultFont", false));
         wfPanelNestCheck.setSelected(AppSettings.getBool("wfPanelNest", false));
         String savedKey = AppSettings.get("aiApiKey", "");
@@ -344,12 +317,10 @@ public class PrimaryController {
         );
         aiModelComboBox.setValue(AppSettings.get("aiModel", "gemini-3-flash-preview"));
 
-        // â”€â”€ Settings: auto-save on change â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         matchDefaultFontCheck.selectedProperty().addListener((obs, o, n) ->
                 AppSettings.setBool("matchDefaultFont", n));
         wfPanelNestCheck.selectedProperty().addListener((obs, o, n) ->
                 AppSettings.setBool("wfPanelNest", n));
-        // Sync password â†” plain text, save on either change
         aiApiKeyPasswordField.textProperty().addListener((obs, o, n) -> {
             AppSettings.set("aiApiKey", n);
             if (!aiApiKeyTextField.getText().equals(n)) aiApiKeyTextField.setText(n);
@@ -362,7 +333,6 @@ public class PrimaryController {
             if (n != null) AppSettings.set("aiModel", n);
         });
 
-        // â”€â”€ Settings: API key reveal toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         aiApiKeyRevealBtn.setOnAction(e -> {
             boolean hidden = aiApiKeyPasswordField.isVisible();
             aiApiKeyPasswordField.setVisible(!hidden);
@@ -375,14 +345,11 @@ public class PrimaryController {
             matchDefaultFontCheck.setSelected(false);
             wfPanelNestCheck.setSelected(false);
             aiApiKeyPasswordField.setText("");
-            // restore to password-hidden state
             aiApiKeyPasswordField.setVisible(true);
             aiApiKeyPasswordField.setManaged(true);
             aiApiKeyTextField.setVisible(false);
             aiApiKeyTextField.setManaged(false);
-            // listeners fire and persist via AppSettings automatically
         });
-        // â”€â”€ AI: Setup CodeAreas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         setupCodeArea(aiImproveSourceArea, false);
         setupCodeArea(aiConsoleSourceArea, false);
         setupCodeArea(aiImageOutput, true);
@@ -390,18 +357,15 @@ public class PrimaryController {
         setupCodeArea(aiConsoleOutput, true);
         setupCodeArea(aiPromptOutput, true);
 
-        // Live Java highlighting on AI source areas
         aiImproveSourceArea.textProperty().addListener((obs, o, n) ->
                 Platform.runLater(() -> applyHighlighting(aiImproveSourceArea, "java")));
         aiConsoleSourceArea.textProperty().addListener((obs, o, n) ->
                 Platform.runLater(() -> applyHighlighting(aiConsoleSourceArea, "java")));
 
-        // â”€â”€ Native header bar button types (provides snap-layout / OS integration) â”€
         HeaderBar.setButtonType(btnMinimize, HeaderButtonType.ICONIFY);
         HeaderBar.setButtonType(btnMaximize, HeaderButtonType.MAXIMIZE);
         HeaderBar.setButtonType(btnClose,    HeaderButtonType.CLOSE);
 
-        // â”€â”€ Swap maximize â†” restore icon on window state change â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         btnMaximize.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene == null) return;
             javafx.stage.Stage s = (javafx.stage.Stage) newScene.getWindow();
@@ -436,12 +400,7 @@ public class PrimaryController {
         area.setEditable(!readOnly);
         area.setWrapText(false);
         area.setPadding(new Insets(6, 14, 6, 4));
-        // Load stylesheet directly on the CodeArea so RichTextFX picks it up
         area.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-        // Line numbers - fixed 44px gutter width (handles up to 4-digit line numbers).
-        // A fixed width avoids the incremental-build race: RichTextFX calls the factory
-        // for each paragraph as replaceText() builds the document one line at a time,
-        // so any dynamic total-based calculation produces inconsistent widths on first render.
         final double GUTTER_W = 44.0;
         area.setParagraphGraphicFactory(idx -> {
             Label lbl = new Label(String.valueOf(idx + 1));
@@ -454,23 +413,18 @@ public class PrimaryController {
                 + " -fx-padding: 0 10 0 0; -fx-alignment: center-right;");
             return lbl;
         });
-        // Intercept Tab
         area.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == KeyCode.TAB) {
                 e.consume();
                 if (!readOnly) area.replaceSelection("    ");
             }
         });
-        // Wrap in VirtualizedScrollPane so vertical scrollbar appears
-        // IMPORTANT: capture parent + index BEFORE creating VSP, because
-        // the VSP constructor immediately re-parents the CodeArea, changing area.getParent()
         VBox parent = (VBox) area.getParent();
         int savedIdx = parent != null ? parent.getChildren().indexOf(area) : -1;
         VirtualizedScrollPane<CodeArea> vsp = new VirtualizedScrollPane<>(area);
         vsp.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         VBox.setVgrow(vsp, Priority.ALWAYS);
         if (parent != null && savedIdx >= 0) {
-            // area was removed from parent by VSP constructor; add VSP at same slot
             parent.getChildren().add(savedIdx, vsp);
         }
     }
@@ -591,15 +545,12 @@ public class PrimaryController {
         return opts;
     }
 
-    // â”€â”€ Preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void updatePreviewButtonVisibility() {
         FrameworkAdapter tgt = FrameworkRegistry.getInstance().get(toCombo.getValue());
-        // Show preview for JavaFX Java code AND JavaFX FXML
         boolean canPreview = tgt != null &&
             ("java".equals(tgt.getSyntaxLanguage()) || "xml".equals(tgt.getSyntaxLanguage()));
         previewButton.setVisible(canPreview);
-        // managed stays true always - button always occupies space so layout doesn't shift
     }
 
     private void handlePreview(CodeArea outputArea, Label status) {
@@ -640,7 +591,6 @@ public class PrimaryController {
         alert.showAndWait();
     }
 
-    // â”€â”€ AI sub-tab switching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void switchAIPage(Button activeBtn, VBox activePage) {
         for (Button b : new Button[]{aiTabImageBtn, aiTabImproveBtn, aiTabConsoleBtn, aiTabPromptBtn}) {
@@ -655,7 +605,6 @@ public class PrimaryController {
         activePage.setManaged(true);
     }
 
-    // â”€â”€ AI: run AI generation on a background thread â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void runAI(String mode, String imagePath, String mainText,
                        String instruction, CodeArea outputArea, Button generateBtn) {
@@ -693,7 +642,6 @@ public class PrimaryController {
         }).start();
     }
 
-    // â”€â”€ AI: copy / save helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void copyToClipboardAI(String text) {
         if (text == null || text.isBlank()) {
@@ -727,7 +675,6 @@ public class PrimaryController {
         }
     }
 
-    // ── Highlighting ───────────────────────────────────────────────────────────
 
     private String langFor(ComboBox<String> combo) {
         FrameworkAdapter a = FrameworkRegistry.getInstance().get(combo.getValue());
@@ -741,7 +688,6 @@ public class PrimaryController {
     }
 
     private StyleSpans<Collection<String>> computeHighlighting(String text, String lang) {
-        // Java / C# keyword list (shared - good enough for both)
         String[] KEYWORDS = {
             "abstract","assert","boolean","break","byte","case","catch","char","class",
             "const","continue","default","do","double","else","enum","extends","final",
@@ -750,7 +696,6 @@ public class PrimaryController {
             "return","short","static","strictfp","super","switch","synchronized","this",
             "throw","throws","transient","try","var","void","volatile","while","sealed",
             "permits","record","yield","null","true","false",
-            // C# extras
             "async","await","base","checked","decimal","delegate","dynamic","event",
             "explicit","extern","fixed","foreach","implicit","in","is","lock","namespace",
             "object","operator","out","override","params","partial","readonly","ref",

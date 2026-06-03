@@ -13,10 +13,6 @@ import java.net.http.HttpResponse;
 import java.util.Base64;
 import javax.imageio.ImageIO;
 
-/**
- * Handles all AI API calls (Gemini).
- * Stateless utility class - call {@link #callApi} from a background thread.
- */
 public class AIService {
 
     public static final String MODE_IMAGE_TO_UI   = "Image upload to UI code";
@@ -27,7 +23,6 @@ public class AIService {
     private static final String ENDPOINT_TEMPLATE =
             "https://aiplatform.googleapis.com/v1/publishers/google/models/%s:generateContent?key=";
 
-    // Shared system instruction injected into every request
     private static final String SYSTEM_INSTRUCTION =
         "You are an expert JavaFX UI developer. Your sole job is to produce complete, "
         + "compilable, runnable JavaFX 17+ source code - a single .java file with a "
@@ -58,7 +53,6 @@ public class AIService {
         + "   - Tooltip.install() is valid; do NOT use node.setTooltip() on non-Control nodes.\n"
         + "   - Always verify every enum constant and static field name is exact before using it.\n";
 
-    // Styling rules appended to every user prompt
     private static final String STYLE_INSTRUCTION =
         "\n\nuse simple style methods which are easy to read, do not use getStylesheets or any method like that keep it simple. "
         + "set the styles directly no need to create seperate string for style aswell and setstyle seperately for every element. "
@@ -66,16 +60,7 @@ public class AIService {
 
     private AIService() {}
 
-    // ── Public entry point ─────────────────────────────────────────────────────
 
-    /**
-     * Sends a request to the Gemini API and returns the generated code string.
-     * Must be called from a background thread.
-     *
-     * @param targetFramework hint for the output format (e.g. "JavaFX", "FXML")
-     * @throws IllegalArgumentException if apiKey is blank
-     * @throws Exception on network / HTTP errors
-     */
     public static String callApi(String mode, String imagePath, String mainText,
                                  String instructions, String apiKey) throws Exception {
         return callApi(mode, imagePath, mainText, instructions, apiKey, "JavaFX");
@@ -139,7 +124,6 @@ public class AIService {
         return parseResponse(response.body());
     }
 
-    // ── Prompt builder ─────────────────────────────────────────────────────────
 
     private static String buildPrompt(String mode, String mainText, String instructions,
                                       String targetFramework) {
@@ -200,7 +184,6 @@ public class AIService {
         };
     }
 
-    // ── JSON helpers ───────────────────────────────────────────────────────────
 
     static String escapeJson(String input) {
         if (input == null) return "";
@@ -213,38 +196,31 @@ public class AIService {
 
     static String parseResponse(String responseBody) {
         try {
-            // Step 1: Extract raw text value from JSON "text" field
             String rawText = extractJsonTextField(responseBody);
             if (rawText == null) return "No code found in response.\n\nRaw:\n" + responseBody;
 
-            // Step 2: Strip markdown code fences if present
             String code = stripCodeFences(rawText).trim();
 
-            // Step 3: If we got something that looks like code, return it
             if (looksLikeCode(code)) return code;
 
-            // Step 4: Fallback - return raw text as-is
             return rawText.trim();
         } catch (Exception e) {
             return "Parsing error: " + e.getMessage() + "\n\nRaw Response:\n" + responseBody;
         }
     }
 
-    /** Reads the first "text" string value from a Gemini JSON response. */
     private static String extractJsonTextField(String json) {
         String lookFor = "\"text\":";
         int pos = 0;
         while (pos < json.length()) {
             int idx = json.indexOf(lookFor, pos);
             if (idx == -1) return null;
-            // skip whitespace after colon
             int valStart = idx + lookFor.length();
             while (valStart < json.length() && json.charAt(valStart) == ' ') valStart++;
             if (valStart >= json.length() || json.charAt(valStart) != '"') {
                 pos = idx + 1; continue;
             }
-            valStart++; // skip opening quote
-            // Read until unescaped closing quote
+            valStart++;
             StringBuilder sb = new StringBuilder();
             for (int i = valStart; i < json.length(); i++) {
                 char c = json.charAt(i);
@@ -279,19 +255,13 @@ public class AIService {
         return null;
     }
 
-    /**
-     * Strips markdown code fences from a string, returning the largest code block found.
-     * Handles ```java, ```javafx, ``` (plain), and text surrounding blocks.
-     */
     static String stripCodeFences(String text) {
         if (text == null) return "";
-        // Find all fenced code blocks and return the largest one
         java.util.List<String> blocks = new java.util.ArrayList<>();
         int i = 0;
         while (i < text.length()) {
             int fence = text.indexOf("```", i);
             if (fence == -1) break;
-            // Skip the fence marker and optional language tag
             int lineEnd = text.indexOf('\n', fence);
             if (lineEnd == -1) { i = fence + 3; continue; }
             int blockStart = lineEnd + 1;
@@ -302,7 +272,6 @@ public class AIService {
             i = blockEnd + 3;
         }
         if (!blocks.isEmpty()) {
-            // Return the largest block (most likely the full class)
             return blocks.stream().max(java.util.Comparator.comparingInt(String::length)).orElse(text);
         }
         return text;
@@ -313,7 +282,6 @@ public class AIService {
         return text.contains("class ") || text.contains("import ") || text.contains("<?xml");
     }
 
-    // ── Image helper ───────────────────────────────────────────────────────────
 
     static byte[] compressImage(File file, int maxWidth) throws IOException {
         BufferedImage original = ImageIO.read(file);

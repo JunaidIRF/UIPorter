@@ -7,16 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-/**
- * Simple key-value settings persistence.
- * File: {@code ~/.uiporter/settings.properties}
- *
- * Keys used:
- *   matchDefaultFont  (boolean, default false)
- *   wfPanelNest       (boolean, default false)
- *   aiApiKey          (string,  default "")
- *   aiModel           (string,  default "gemini-3-flash-preview")
- */
 public class AppSettings {
 
     private static final Path SETTINGS_FILE =
@@ -30,7 +20,6 @@ public class AppSettings {
 
     private AppSettings() {}
 
-    // ── Load / save ────────────────────────────────────────────────────────────
 
     public static void load() {
         if (Files.exists(SETTINGS_FILE)) {
@@ -49,7 +38,6 @@ public class AppSettings {
         } catch (IOException ignored) {}
     }
 
-    // ── Accessors ──────────────────────────────────────────────────────────────
 
     public static String get(String key, String defaultValue) {
         return PROPS.getProperty(key, defaultValue);

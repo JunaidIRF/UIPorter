@@ -19,7 +19,6 @@ public class FrameworkRegistry {
         adapters.add(adapter);
     }
 
-    /** Returns the adapter whose {@link FrameworkAdapter#getDisplayName()} matches, or null. */
     public FrameworkAdapter get(String displayName) {
         if (displayName == null) return null;
         for (FrameworkAdapter a : adapters) {

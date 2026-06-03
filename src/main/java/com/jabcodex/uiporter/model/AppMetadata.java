@@ -13,16 +13,12 @@ public class AppMetadata {
     public String formBackColor = null;
     public String formBackgroundImage = null;
 
-    /** The class name of the JavaFX source (e.g. "ConvertedApp"), used as WinForms form class name. */
     public String sourceClassName = null;
 
-    /** fx:controller attribute value from root FXML element (e.g. "com.example.MyController"). */
     public String fxController = null;
 
-    /** Stylesheet URLs collected from &lt;stylesheets&gt; in FXML or getStylesheets().add() in Java. */
     public List<String> stylesheets = new ArrayList<>();
 
-    /** Set by an adapter's parse() when the source cannot be parsed. */
     public boolean parseError = false;
     public String parseErrorMessage = null;
 }

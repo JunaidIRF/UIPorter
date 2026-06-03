@@ -7,18 +7,7 @@ import com.jabcodex.uiporter.model.Node;
 
 import java.util.*;
 
-/**
- * Adapter that converts between the canonical AppMetadata IR and JavaFX FXML
- * (XML declarative UI format).
- *
- * <p>Parsing: XML DOM → AppMetadata (same property keys as JavaFxAdapter)
- * <p>Generation: AppMetadata → well-formed FXML with {@code <?import?>} directives,
- *    inline {@code style=""} attributes, {@code <font>} / {@code <padding>} child elements,
- *    proper container wrappers per layout type, and {@code fx:controller} support.
- */
 public class FxmlAdapter implements FrameworkAdapter {
-
-    // ── Interface ─────────────────────────────────────────────────────────────
 
     @Override
     public String getDisplayName() { return "JavaFX (FXML)"; }
@@ -40,8 +29,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         return generateFxml(app, options);
     }
 
-    // ── Known types (same set as JavaFxAdapter.KNOWN_TYPES) ──────────────────
-
     private static final Set<String> KNOWN_TYPES = new HashSet<>(Arrays.asList(
         "Button", "Label", "TextField", "PasswordField", "TextArea",
         "CheckBox", "RadioButton", "ComboBox", "ChoiceBox", "ListView", "TableView",
@@ -58,11 +45,8 @@ public class FxmlAdapter implements FrameworkAdapter {
         "PieChart", "BarChart", "LineChart", "AreaChart"
     ));
 
-    // ── JavaFX type → package map for <?import?> generation ──────────────────
-
     private static final Map<String, String> TYPE_PACKAGE = new LinkedHashMap<>();
     static {
-        // javafx.scene.control
         for (String t : new String[]{
             "Button","Label","TextField","PasswordField","TextArea","CheckBox","RadioButton",
             "ComboBox","ChoiceBox","ListView","TableView","TableColumn","TreeView","TreeItem",
@@ -73,43 +57,35 @@ public class FxmlAdapter implements FrameworkAdapter {
             "Accordion","Pagination","TitledPane","SeparatorMenuItem"
         }) TYPE_PACKAGE.put(t, "javafx.scene.control");
 
-        // javafx.scene.layout
         for (String t : new String[]{
             "VBox","HBox","GridPane","BorderPane","FlowPane","Pane",
             "StackPane","AnchorPane","TilePane"
         }) TYPE_PACKAGE.put(t, "javafx.scene.layout");
-        TYPE_PACKAGE.put("SplitPane", "javafx.scene.control"); // SplitPane is a control, not a layout
+        // SplitPane is a control, not a layout
+        TYPE_PACKAGE.put("SplitPane", "javafx.scene.control");
 
-        // Other packages
         TYPE_PACKAGE.put("ImageView",  "javafx.scene.image");
         TYPE_PACKAGE.put("Canvas",     "javafx.scene.canvas");
-        TYPE_PACKAGE.put("GroupBox",   "javafx.scene.layout"); // fallback
+        TYPE_PACKAGE.put("GroupBox",   "javafx.scene.layout");
         TYPE_PACKAGE.put("Region",     "javafx.scene.layout");
 
-        // javafx.scene.shape
         for (String t : new String[]{"Circle", "Rectangle", "Line", "Ellipse", "Polygon"})
             TYPE_PACKAGE.put(t, "javafx.scene.shape");
 
-        // javafx.scene.text
         for (String t : new String[]{"Text", "TextFlow"})
             TYPE_PACKAGE.put(t, "javafx.scene.text");
 
-        // javafx.scene
         TYPE_PACKAGE.put("Group", "javafx.scene");
 
-        // javafx.scene.chart
         for (String t : new String[]{"PieChart", "BarChart", "LineChart", "AreaChart"})
             TYPE_PACKAGE.put(t, "javafx.scene.chart");
 
-        // Data types used in FXML structures
         TYPE_PACKAGE.put("FXCollections",          "javafx.collections");
         TYPE_PACKAGE.put("TreeItem",               "javafx.scene.control");
         TYPE_PACKAGE.put("ToggleGroup",            "javafx.scene.control");
         TYPE_PACKAGE.put("SpinnerValueFactory",    "javafx.scene.control");
         TYPE_PACKAGE.put("Tooltip",                "javafx.scene.control");
     }
-
-    // ── Pos ↔ ContentAlignment (mirrors JavaFxAdapter) ───────────────────────
 
     private static final Map<String, String> POS_TO_ALIGN = new LinkedHashMap<>();
     private static final Map<String, String> ALIGN_TO_POS = new LinkedHashMap<>();
@@ -126,10 +102,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         for (Map.Entry<String, String> e : POS_TO_ALIGN.entrySet())
             ALIGN_TO_POS.put(e.getValue(), e.getKey());
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PARSE
-    // ─────────────────────────────────────────────────────────────────────────
 
     private AppMetadata parseFxml(String source) {
         AppMetadata app = new AppMetadata();
@@ -156,7 +128,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         Map<String, int[]> idCounters = new HashMap<>();
         org.w3c.dom.Element root = doc.getDocumentElement();
 
-        // Read scene size from root element prefWidth/prefHeight
         String rootW = root.getAttribute("prefWidth");
         String rootH = root.getAttribute("prefHeight");
         if (!rootW.isEmpty()) {
@@ -168,7 +139,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             catch (NumberFormatException ignored) {}
         }
 
-        // fx:controller
         String ctrl = root.getAttribute("fx:controller");
         if (ctrl == null || ctrl.isEmpty())
             ctrl = root.getAttributeNS("http://javafx.com/fxml", "controller");
@@ -181,7 +151,6 @@ public class FxmlAdapter implements FrameworkAdapter {
 
     private Node parseFxmlElement(org.w3c.dom.Element el, AppMetadata app,
                                   Map<String, int[]> idCounters, String parentBpRegion) {
-        // Resolve tag name (strip any XML namespace prefix)
         String tagName = el.getLocalName();
         if (tagName == null) tagName = el.getNodeName();
         int colon = tagName.indexOf(':');
@@ -189,7 +158,6 @@ public class FxmlAdapter implements FrameworkAdapter {
 
         if (!KNOWN_TYPES.contains(tagName)) return null;
 
-        // Determine node ID
         String fxId = el.getAttributeNS("http://javafx.com/fxml", "id");
         if (fxId == null || fxId.isEmpty()) fxId = el.getAttribute("fx:id");
         if (fxId == null || fxId.isEmpty()) {
@@ -203,7 +171,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         node.type = tagName;
         if (parentBpRegion != null) node.addProperty("borderPaneRegion", parentBpRegion);
 
-        // ── Standard attributes ───────────────────────────────────────────────
         mapAttr(el, "text",        node, "text");
         mapAttr(el, "promptText",  node, "promptText");
 
@@ -240,7 +207,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         fxmlDimProp(el, "value",    node, "value");
         fxmlDimProp(el, "progress", node, "progress");
 
-        // Shape / Text paint attributes
         String fillAttr = el.getAttribute("fill");
         if (!fillAttr.isEmpty()) node.addProperty("fill", fillAttr);
         String strokeAttr = el.getAttribute("stroke");
@@ -248,11 +214,9 @@ public class FxmlAdapter implements FrameworkAdapter {
         String strokeWidthAttr = el.getAttribute("strokeWidth");
         if (!strokeWidthAttr.isEmpty()) node.addProperty("strokeWidth", strokeWidthAttr);
 
-        // StackPane static alignment constraint on this node
         String spAlign = el.getAttribute("StackPane.alignment");
         if (!spAlign.isEmpty()) node.addProperty("stackPaneAlignment", spAlign);
 
-        // GridPane static constraint attributes on this element (when placed inside GridPane)
         String gpRow = el.getAttribute("GridPane.rowIndex");
         if (!gpRow.isEmpty()) node.addProperty("gridRow", gpRow);
         String gpCol = el.getAttribute("GridPane.columnIndex");
@@ -266,18 +230,15 @@ public class FxmlAdapter implements FrameworkAdapter {
         String vgrowAttr = el.getAttribute("VBox.vgrow");
         if (!vgrowAttr.isEmpty()) node.addProperty("vgrow", vgrowAttr);
 
-        // Alignment (JavaFX Pos → canonical ContentAlignment)
         String align = el.getAttribute("alignment");
         if (!align.isEmpty()) {
             String ca = POS_TO_ALIGN.get(align);
             if (ca != null) node.addProperty("textAlign", ca);
         }
 
-        // Inline CSS style
         String style = el.getAttribute("style");
         if (!style.isEmpty()) JavaFxAdapter.parseFxStyle(style, node);
-        
-        // styleClass
+
         String styleClassAttr = el.getAttribute("styleClass");
         if (!styleClassAttr.isEmpty()) {
             String existing = node.properties.get("styleClass");
@@ -285,7 +246,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             node.addProperty("styleClass", existing == null ? newClasses : existing + " " + newClasses);
         }
 
-        // Boolean / state attributes
         if ("false".equals(el.getAttribute("visible")))  node.addProperty("visible",  "false");
         if ("true".equals(el.getAttribute("disable")))   node.addProperty("enabled",  "false");
         if ("false".equals(el.getAttribute("editable"))) node.addProperty("editable", "false");
@@ -312,12 +272,10 @@ public class FxmlAdapter implements FrameworkAdapter {
         String opacityAttr = el.getAttribute("opacity");
         if (!opacityAttr.isEmpty()) node.addProperty("nodeOpacity", opacityAttr);
 
-        // Event handler attributes
         parseEventAttr(el, "onAction",       node);
         parseEventAttr(el, "onMouseClicked", node);
         parseEventAttr(el, "onMousePressed", node);
 
-        // ── Child elements ────────────────────────────────────────────────────
         org.w3c.dom.NodeList children = el.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             org.w3c.dom.Node childDom = children.item(i);
@@ -345,37 +303,31 @@ public class FxmlAdapter implements FrameworkAdapter {
                 continue;
             }
 
-            // <font> child - <font><Font name="..." size="..."/></font>
             if ("font".equals(childTag)) {
                 parseFxmlFontChild(childEl, node);
                 continue;
             }
-            
-            // <styleClass> child
+
             if ("styleClass".equals(childTag)) {
                 parseFxmlStyleClassChild(childEl, node);
                 continue;
             }
-            
-            // <effect> child
+
             if ("effect".equals(childTag)) {
                 parseFxmlEffectChild(childEl, node);
                 continue;
             }
 
-            // <padding> child - <padding><Insets top="..." .../></padding>
             if ("padding".equals(childTag)) {
                 parseFxmlPaddingChild(childEl, node);
                 continue;
             }
 
-            // <stylesheets> child - <stylesheets><URL value="@styles.css"/></stylesheets>
             if ("stylesheets".equals(childTag)) {
                 parseFxmlStylesheetsChild(childEl, app);
                 continue;
             }
 
-            // <valueFactory> for Spinner - extract min/max/initialValue from inner element
             if ("valueFactory".equals(childTag)) {
                 org.w3c.dom.NodeList vfKids = childEl.getChildNodes();
                 for (int j = 0; j < vfKids.getLength(); j++) {
@@ -389,7 +341,6 @@ public class FxmlAdapter implements FrameworkAdapter {
                 continue;
             }
 
-            // <items> - extract FXCollections/String list before falling into generic wrapper handling
             if ("items".equals(childTag)) {
                 java.util.List<String> parsedItems = parseFxmlItemsElement(childEl);
                 if (!parsedItems.isEmpty()) {
@@ -408,12 +359,10 @@ public class FxmlAdapter implements FrameworkAdapter {
                 continue;
             }
 
-            // Property wrapper elements: <VBox.children>, <GridPane.columnConstraints>, etc.
-            // Also container-specific: <tabs>, <columns>, <menus>, <panes>, <content>, <root>
             if (childTag.endsWith(".columnConstraints")) {
                 // Mark that this GridPane has explicit column constraints in the source FXML
                 node.addProperty("hasColumnConstraints", "true");
-                continue; // ColumnConstraints is not a KNOWN_TYPE; skip children
+                continue;
             }
             if (childTag.contains(".") || isContainerWrapper(childTag)) {
                 org.w3c.dom.NodeList wrapKids = childEl.getChildNodes();
@@ -430,7 +379,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             Node child = parseFxmlElement(childEl, app, idCounters, null);
             if (child != null) ConversionUtils.addChild(app, node, child);
         }
-        // GridPane parsed from FXML: mark as having no column constraints if none were found
         if ("GridPane".equals(tagName) && !node.properties.containsKey("hasColumnConstraints"))
             node.addProperty("hasColumnConstraints", "false");
         return node;
@@ -443,7 +391,7 @@ public class FxmlAdapter implements FrameworkAdapter {
     }
 
     /**
-     * Parses an FXML &lt;items&gt; element looking for the pattern:
+     * Parses an FXML &lt;items&gt; element looking for:
      * &lt;FXCollections fx:factory="observableArrayList"&gt;&lt;String fx:value="..."/&gt;...&lt;/FXCollections&gt;
      * Returns a list of string values, or empty list if the pattern is not found.
      */
@@ -491,11 +439,12 @@ public class FxmlAdapter implements FrameworkAdapter {
             String size = fontDef.getAttribute("size");
             if (!size.isEmpty()) {
                 node.addProperty("fontSize", size);
-                node.addProperty("fontSizeUnit", "px"); // FXML <Font size> uses CSS pixels, same as Font.font() API
+                // FXML <Font size> uses CSS pixels, same as Font.font() API
+                node.addProperty("fontSizeUnit", "px");
             }
         }
     }
-    
+
     private static void parseFxmlStyleClassChild(org.w3c.dom.Element scEl, Node node) {
         org.w3c.dom.NodeList kids = scEl.getChildNodes();
         java.util.List<String> classes = new java.util.ArrayList<>();
@@ -537,7 +486,7 @@ public class FxmlAdapter implements FrameworkAdapter {
             }
         }
     }
-    
+
     private static void parseFxmlEffectChild(org.w3c.dom.Element effEl, Node node) {
         org.w3c.dom.NodeList kids = effEl.getChildNodes();
         for (int i = 0; i < kids.getLength(); i++) {
@@ -600,10 +549,9 @@ public class FxmlAdapter implements FrameworkAdapter {
     }
 
     /**
-     * Reverses {@link #escapeFxmlPrefix(String)}: when an FXML attribute value starts with
-     * a backslash followed by one of {@code $ @ % \}, strip the leading backslash. Otherwise
-     * literal {@code $124,592} stored in the IR would round-trip through Java/FXML as the
-     * over-escaped string {@code \$124,592}.
+     * Reverses {@link #escapeFxmlPrefix(String)}: strips the leading backslash from values
+     * that were escaped to prevent FXML treating them as expression/resource references
+     * (e.g. {@code \$124,592} → {@code $124,592}).
      */
     private static String unescapeFxmlPrefix(String v) {
         if (v == null || v.length() < 2) return v;
@@ -625,27 +573,20 @@ public class FxmlAdapter implements FrameworkAdapter {
         return (v == null || v.isEmpty()) ? def : v;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // GENERATE
-    // ─────────────────────────────────────────────────────────────────────────
-
     private String generateFxml(AppMetadata app, Map<String, Object> options) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 
-        // Collect all node types present in this AppMetadata
         Set<String> usedTypes = new TreeSet<>();
         for (Node n : app.allNodes) {
             if (n.type != null && !n.type.isEmpty()) {
                 usedTypes.add(n.type);
-                // Insets needed when <padding> child is emitted
                 if (n.properties.containsKey("padding"))
                     usedTypes.add("Insets");
             }
         }
 
-        // Emit <?import?> lines grouped and sorted
         Set<String> importLines = new TreeSet<>();
         for (String type : usedTypes) {
             String pkg = TYPE_PACKAGE.get(type);
@@ -654,7 +595,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             else if ("Insets".equals(type)) importLines.add("javafx.geometry.Insets");
         }
 
-        // Extra imports based on data features used
         boolean needsFXCollections = false, needsStringType = false,
                 needsTreeItem = false, needsSpinnerVF = false, needsToggleGroup = false,
                 needsPieChartData = false, needsTooltip = false;
@@ -697,7 +637,7 @@ public class FxmlAdapter implements FrameworkAdapter {
             importLines.add("javafx.scene.chart.CategoryAxis");
             importLines.add("javafx.scene.chart.NumberAxis");
         }
-        
+
         for (Node n : app.allNodes) {
             if (n.properties.containsKey("effectType")) {
                 importLines.add("javafx.scene.effect." + n.properties.get("effectType"));
@@ -707,18 +647,15 @@ public class FxmlAdapter implements FrameworkAdapter {
         for (String imp : importLines)
             sb.append("<?import ").append(imp).append("?>\n");
 
-        // Add String import if stylesheets present
         if (!app.stylesheets.isEmpty() && !importLines.contains("java.lang.String"))
             sb.append("<?import java.lang.String?>\n");
 
         sb.append("\n");
 
-        // Find root node
         Node rootNode = ConversionUtils.findById(app, app.sceneRootId);
         if (rootNode == null && !app.allNodes.isEmpty()) rootNode = app.allNodes.get(0);
         if (rootNode == null) return sb.toString();
 
-        // Emit root element
         writeXmlNode(sb, rootNode, app, "", true);
 
         return sb.toString();
@@ -731,7 +668,6 @@ public class FxmlAdapter implements FrameworkAdapter {
 
         sb.append(indent).append("<").append(type);
 
-        // xmlns on root
         if (isRoot) {
             sb.append("\n").append(indent).append("   xmlns=\"http://javafx.com/javafx\"");
             sb.append("\n").append(indent).append("   xmlns:fx=\"http://javafx.com/fxml\"");
@@ -740,11 +676,9 @@ public class FxmlAdapter implements FrameworkAdapter {
                   .append(xmlEsc(app.fxController)).append("\"");
         }
 
-        // fx:id
         if (node.id != null && !node.id.isEmpty())
             appendAttr(sb, "fx:id", node.id, indent);
 
-        // Scene dimensions on root
         if (isRoot) {
             if (app.sceneWidth > 0)
                 appendAttr(sb, "prefWidth", String.valueOf(app.sceneWidth), indent);
@@ -752,15 +686,12 @@ public class FxmlAdapter implements FrameworkAdapter {
                 appendAttr(sb, "prefHeight", String.valueOf(app.sceneHeight), indent);
         }
 
-        // text
         String text = node.properties.get("text");
         if (text != null) appendAttr(sb, "text", text, indent);
 
-        // promptText
         String promptText = node.properties.get("promptText");
         if (promptText != null) appendAttr(sb, "promptText", promptText, indent);
 
-        // Dimensions (skip on root - already emitted as scene size)
         if (!isRoot) {
             // Shape subclasses expose different dimension attributes than Region nodes.
             // Rectangle  → width / height
@@ -779,7 +710,6 @@ public class FxmlAdapter implements FrameworkAdapter {
                 emitDimAttr(sb, node, "width",  "prefWidth",  indent);
                 emitDimAttr(sb, node, "height", "prefHeight", indent);
             }
-            // Line coordinates
             if ("Line".equals(type)) {
                 String sx = node.properties.get("startX"); if (sx != null) appendAttr(sb, "startX", sx, indent);
                 String sy = node.properties.get("startY"); if (sy != null) appendAttr(sb, "startY", sy, indent);
@@ -794,7 +724,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             emitDimAttr(sb, node, "layoutY",   "layoutY",    indent);
         }
 
-        // Container gaps - only emit on types that support the property in FXML
         if ("GridPane".equals(type) || "FlowPane".equals(type) || "TilePane".equals(type)) {
             emitDimAttr(sb, node, "hgap", "hgap", indent);
             emitDimAttr(sb, node, "vgap", "vgap", indent);
@@ -805,14 +734,12 @@ public class FxmlAdapter implements FrameworkAdapter {
             if (sp != null) appendAttr(sb, "spacing", sp, indent);
         }
 
-        // Alignment
         String textAlign = node.properties.get("textAlign");
         if (textAlign != null) {
             String pos = ALIGN_TO_POS.get(textAlign);
             if (pos != null) appendAttr(sb, "alignment", pos, indent);
         }
 
-        // Range / progress
         // Spinner: min/max/value go in <valueFactory> child - do NOT emit as attributes
         if (!"Spinner".equals(type)) {
             emitDimAttr(sb, node, "min",      "min",      indent);
@@ -821,12 +748,10 @@ public class FxmlAdapter implements FrameworkAdapter {
         }
         emitDimAttr(sb, node, "progress", "progress", indent);
 
-        // ComboBox / ChoiceBox selected value
         String selVal = node.properties.get("selectedValue");
         if (selVal != null && ("ComboBox".equals(type) || "ChoiceBox".equals(type)))
             appendAttr(sb, "value", selVal, indent);
 
-        // Boolean state attributes
         if ("false".equals(node.properties.get("visible")))         appendAttr(sb, "visible",           "false", indent);
         if ("false".equals(node.properties.get("enabled")))         appendAttr(sb, "disable",           "true",  indent);
         if ("false".equals(node.properties.get("editable")))        appendAttr(sb, "editable",          "false", indent);
@@ -835,7 +760,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         if ("false".equals(node.properties.get("focusTraversable"))) appendAttr(sb, "focusTraversable", "false", indent);
         if ("true".equals(node.properties.get("mouseTransparent")))  appendAttr(sb, "mouseTransparent", "true",  indent);
 
-        // Transform attributes
         String rotate = node.properties.get("rotate");
         if (rotate != null) appendAttr(sb, "rotate", rotate, indent);
         String scaleX = node.properties.get("scaleX");
@@ -848,26 +772,22 @@ public class FxmlAdapter implements FrameworkAdapter {
         if (translateY != null) appendAttr(sb, "translateY", translateY, indent);
         String nodeOpacity = node.properties.get("nodeOpacity");
         if (nodeOpacity != null) appendAttr(sb, "opacity", nodeOpacity, indent);
-        
+
         String styleClass = node.properties.get("styleClass");
         if (styleClass != null && !styleClass.isEmpty()) {
             // FXML styleClass attribute uses comma-separated lists for multiple classes
             appendAttr(sb, "styleClass", styleClass.trim().replaceAll("\\s+", ", "), indent);
         }
 
-        // Orientation (Slider, SplitPane, Separator, ScrollBar)
         String orientation = node.properties.get("orientation");
         if (orientation != null) appendAttr(sb, "orientation", orientation, indent);
 
-        // SplitPane divider position
         String divPos = node.properties.get("dividerPosition");
         if (divPos != null && "SplitPane".equals(type)) appendAttr(sb, "dividerPositions", divPos, indent);
 
-        // TilePane column count
         String prefCols = node.properties.get("prefColumns");
         if (prefCols != null && "TilePane".equals(type)) appendAttr(sb, "prefColumns", prefCols, indent);
 
-        // Pagination page count and current index
         if ("Pagination".equals(type)) {
             String pc = node.properties.get("pageCount");
             if (pc != null) appendAttr(sb, "pageCount", pc, indent);
@@ -875,7 +795,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             if (cpi != null) appendAttr(sb, "currentPageIndex", cpi, indent);
         }
 
-        // Event handler
         if ("true".equals(node.properties.get("hasClick"))) {
             String method = node.properties.get("clickMethod");
             if (method != null && !method.isEmpty())
@@ -884,11 +803,9 @@ public class FxmlAdapter implements FrameworkAdapter {
                 appendAttr(sb, "onAction", "#handleAction", indent);
         }
 
-        // StackPane.alignment constraint
         String stackPaneAlign = node.properties.get("stackPaneAlignment");
         if (stackPaneAlign != null) appendAttr(sb, "StackPane.alignment", stackPaneAlign, indent);
 
-        // GridPane static constraints (when this node is inside a GridPane)
         String gridRow = node.properties.get("gridRow");
         if (gridRow != null) appendAttr(sb, "GridPane.rowIndex", gridRow, indent);
         String gridCol = node.properties.get("gridCol");
@@ -902,11 +819,9 @@ public class FxmlAdapter implements FrameworkAdapter {
         String vgrow = node.properties.get("vgrow");
         if (vgrow != null) appendAttr(sb, "VBox.vgrow", vgrow, indent);
 
-        // Tab.closable
         if ("false".equals(node.properties.get("closable")))
             appendAttr(sb, "closable", "false", indent);
 
-        // TitledPane expanded state
         if ("true".equals(node.properties.get("expanded")) && "TitledPane".equals(type))
             appendAttr(sb, "expanded", "true", indent);
 
@@ -915,25 +830,20 @@ public class FxmlAdapter implements FrameworkAdapter {
         if (toggleGroupId != null && "RadioButton".equals(type))
             appendAttrRaw(sb, "toggleGroup", "$" + toggleGroupId, indent);
 
-        // TextArea preferred row count
         String prefRowCount = node.properties.get("prefRowCount");
         if (prefRowCount != null) appendAttr(sb, "prefRowCount", prefRowCount, indent);
 
-        // Slider tick marks
         if ("true".equals(node.properties.get("showTickLabels")))
             appendAttr(sb, "showTickLabels", "true", indent);
         if ("true".equals(node.properties.get("showTickMarks")))
             appendAttr(sb, "showTickMarks", "true", indent);
 
-        // Circle radius
         String radius = node.properties.get("radius");
         if (radius != null) appendAttr(sb, "radius", radius, indent);
 
-        // Polygon points attribute
         String polyPoints = node.properties.get("points");
         if (polyPoints != null && "Polygon".equals(type)) appendAttr(sb, "points", polyPoints, indent);
 
-        // Shape fill / stroke (Circle, Rectangle, Line, Ellipse, Polygon)
         String fill = node.properties.get("fill");
         if (fill != null && !fill.contains("gradient")) appendAttr(sb, "fill", fill, indent);
         String stroke = node.properties.get("stroke");
@@ -941,17 +851,14 @@ public class FxmlAdapter implements FrameworkAdapter {
         String strokeWidth = node.properties.get("strokeWidth");
         if (strokeWidth != null) appendAttr(sb, "strokeWidth", strokeWidth, indent);
 
-        // PieChart-specific attributes
         String chartTitle = node.properties.get("chartTitle");
         if (chartTitle != null && "PieChart".equals(type)) appendAttr(sb, "title", xmlEsc(chartTitle), indent);
         String legendSide = node.properties.get("legendSide");
         if (legendSide != null) appendAttr(sb, "legendSide", legendSide, indent);
 
-        // Inline style
         String styleAttr = buildStyleAttr(node);
         if (!styleAttr.isEmpty()) appendAttr(sb, "style", styleAttr, indent);
 
-        // Determine if we need child content
         String itemsProp         = node.properties.get("items");
         String treeRootText      = node.properties.get("treeRootText");
         boolean hasItems         = itemsProp != null && !itemsProp.isEmpty()
@@ -970,8 +877,7 @@ public class FxmlAdapter implements FrameworkAdapter {
         boolean hasPieData      = "PieChart".equals(type) && node.properties.containsKey("pieChartData");
         boolean hasTooltip      = node.properties.containsKey("tooltipText");
         boolean hasEffect       = node.properties.containsKey("effectType");
-        // XYChart subclasses (LineChart, BarChart, AreaChart) have no no-arg constructor;
-        // FXML must supply <xAxis>/<yAxis> for the loader to instantiate them.
+        // XYChart subclasses have no no-arg constructor; FXML must supply <xAxis>/<yAxis> for FXMLLoader to instantiate them.
         boolean hasAxes         = "LineChart".equals(type) || "BarChart".equals(type) || "AreaChart".equals(type);
 
         boolean hasContent = hasFontChild || hasPaddingChild || hasStylesheets || hasChildren
@@ -986,7 +892,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         sb.append(">\n");
         String childIndent = indent + "    ";
 
-        // <stylesheets> (root only)
         if (hasStylesheets) {
             sb.append(childIndent).append("<stylesheets>\n");
             for (String ss : app.stylesheets) {
@@ -999,7 +904,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             sb.append(childIndent).append("</stylesheets>\n");
         }
 
-        // <font> child
         if (hasFontChild) {
             String fam  = node.properties.get("fontFamily");
             String fsz  = node.properties.get("fontSize");
@@ -1008,7 +912,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             sb.append(childIndent).append("    <Font");
             if (fam != null) sb.append(" name=\"").append(xmlEsc(fam)).append("\"");
             if (fsz != null) {
-                // FXML Font size is in pt; if stored as px annotate comment
                 sb.append(" size=\"").append(fsz).append("\"");
                 if ("px".equals(fszU)) sb.append(" <!-- px -->");
             }
@@ -1016,7 +919,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             sb.append(childIndent).append("</font>\n");
         }
 
-        // <padding> child
         if (hasPaddingChild) {
             String padVal = node.properties.get("padding");
             if (padVal == null) padVal = node.properties.get("padValue");
@@ -1027,7 +929,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             sb.append(childIndent).append("</padding>\n");
         }
 
-        // <ParentType.margin> for nodes using VBox.setMargin / HBox.setMargin / GridPane.setMargin
         if (hasCellMargin) {
             String marginParent = node.properties.get("cellMarginParent");
             String cm = node.properties.get("cellMargin");
@@ -1040,7 +941,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             }
         }
 
-        // <items> for ComboBox / ChoiceBox / ListView
         if (hasItems) {
             String[] itArr = itemsProp.split("\\|");
             sb.append(childIndent).append("<items>\n");
@@ -1051,9 +951,8 @@ public class FxmlAdapter implements FrameworkAdapter {
             sb.append(childIndent).append("</items>\n");
         }
 
-        // <root> for TreeView
         if (hasTreeRoot) {
-            String treeChildren = node.properties.get("treeChildren"); // pipe-delimited child values
+            String treeChildren = node.properties.get("treeChildren");
             boolean expanded    = !"false".equals(node.properties.get("treeRootExpanded"));
             sb.append(childIndent).append("<root>\n");
             sb.append(childIndent).append("    <TreeItem value=\"").append(xmlEsc(treeRootText)).append("\"");
@@ -1072,7 +971,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             sb.append(childIndent).append("</root>\n");
         }
 
-        // <valueFactory> for Spinner
         if (hasValueFactory) {
             String minVal = node.properties.getOrDefault("min",   "0");
             String maxVal = node.properties.getOrDefault("max",   "100");
@@ -1104,12 +1002,12 @@ public class FxmlAdapter implements FrameworkAdapter {
             }
         }
 
-        // Children
         if (hasChildren) {
             writeChildrenFxml(sb, node, app, childIndent);
         }
 
-        // <xAxis>/<yAxis> for XYChart subclasses (LineChart/BarChart/AreaChart)
+        // XYChart subclasses (LineChart/BarChart/AreaChart) have no no-arg constructor;
+        // FXML must supply <xAxis>/<yAxis> for the loader to instantiate them.
         if (hasAxes) {
             sb.append(childIndent).append("<xAxis>\n");
             sb.append(childIndent).append("    <CategoryAxis");
@@ -1127,7 +1025,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             sb.append(childIndent).append("</yAxis>\n");
         }
 
-        // <data> for PieChart
         if (hasPieData) {
             String[] items = node.properties.get("pieChartData").split("\\|");
             sb.append(childIndent).append("<data>\n");
@@ -1140,15 +1037,13 @@ public class FxmlAdapter implements FrameworkAdapter {
             sb.append(childIndent).append("</data>\n");
         }
 
-        // <tooltip> for any node with a tooltip
         if (hasTooltip) {
             sb.append(childIndent).append("<tooltip>\n");
             sb.append(childIndent).append("    <Tooltip text=\"")
               .append(xmlEsc(node.properties.get("tooltipText"))).append("\"/>\n");
             sb.append(childIndent).append("</tooltip>\n");
         }
-        
-        // <effect> child
+
         if (hasEffect) {
             String eType = node.properties.get("effectType");
             if ("DropShadow".equals(eType)) {
@@ -1181,15 +1076,11 @@ public class FxmlAdapter implements FrameworkAdapter {
         sb.append(indent).append("</").append(type).append(">\n");
     }
 
-    /**
-     * Writes the children of {@code parent} wrapped in the appropriate FXML container element.
-     */
     private void writeChildrenFxml(StringBuilder sb, Node parent, AppMetadata app,
                                    String indent) {
         String type = parent.type;
 
         if ("BorderPane".equals(type)) {
-            // Group children by borderPaneRegion
             Map<String, List<Node>> regions = new LinkedHashMap<>();
             for (String r : Arrays.asList("top", "bottom", "left", "right", "center"))
                 regions.put(r, new ArrayList<>());
@@ -1201,7 +1092,6 @@ public class FxmlAdapter implements FrameworkAdapter {
                 else
                     unplaced.add(child);
             }
-            // Assign unplaced to center
             if (!unplaced.isEmpty()) regions.get("center").addAll(unplaced);
             for (Map.Entry<String, List<Node>> entry : regions.entrySet()) {
                 if (entry.getValue().isEmpty()) continue;
@@ -1230,7 +1120,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         }
 
         if ("ScrollPane".equals(type)) {
-            // ScrollPane takes a single child in <content>
             sb.append(indent).append("<content>\n");
             for (Node child : parent.children)
                 writeXmlNode(sb, child, app, indent + "    ", false);
@@ -1286,7 +1175,6 @@ public class FxmlAdapter implements FrameworkAdapter {
             return;
         }
 
-        // Tab: single content node goes in <content> wrapper
         if ("Tab".equals(type)) {
             sb.append(indent).append("<content>\n");
             for (Node child : parent.children)
@@ -1295,15 +1183,12 @@ public class FxmlAdapter implements FrameworkAdapter {
             return;
         }
 
-        // Default: <children> wrapper (VBox, HBox, GridPane, StackPane, Pane, AnchorPane,
-        //          FlowPane, TilePane, etc.)
+        // Default: <children> wrapper (VBox, HBox, GridPane, StackPane, Pane, AnchorPane, FlowPane, TilePane, etc.)
         sb.append(indent).append("<children>\n");
         for (Node child : parent.children)
             writeXmlNode(sb, child, app, indent + "    ", false);
         sb.append(indent).append("</children>\n");
     }
-
-    // ── Style attribute builder ───────────────────────────────────────────────
 
     private String buildStyleAttr(Node node) {
         StringBuilder style = new StringBuilder();
@@ -1316,7 +1201,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         if (fillVal != null && fillVal.contains("gradient"))
             style.append("-fx-fill: ").append(fillVal).append("; ");
 
-        // Border: explicit props first; FixedSingle fallback
         String bw = node.properties.get("borderWidth");
         String bc = node.properties.get("borderColor");
         if (bw != null) style.append("-fx-border-width: ").append(bw).append("; ");
@@ -1329,8 +1213,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         append(style, "backgroundRadius", "-fx-background-radius", node, false);
         append(style, "borderRadius",     "-fx-border-radius",    node, false);
 
-        // Font - only emit in style if NOT also emitted as <font> child
-        // We always include font in style for maximum compatibility
         String fam = node.properties.get("fontFamily");
         String fsz = node.properties.get("fontSize");
         if (fam != null) style.append("-fx-font-family: '").append(fam).append("'; ");
@@ -1344,7 +1226,6 @@ public class FxmlAdapter implements FrameworkAdapter {
         if ("ITALIC".equals(node.properties.get("fontPosture")))
             style.append("-fx-font-style: italic; ");
 
-        // Passthrough
         String extra = node.properties.get("extraCss");
         if (extra != null && !extra.isEmpty())
             style.append(extra.endsWith(";") || extra.endsWith("; ") ? extra : extra + "; ");
@@ -1362,10 +1243,7 @@ public class FxmlAdapter implements FrameworkAdapter {
         sb.append("; ");
     }
 
-    // ── XML emission helpers ──────────────────────────────────────────────────
-
     private static void appendAttr(StringBuilder sb, String name, String value, String indent) {
-        // For readability, put xmlns/fx:controller on their own lines (handled at call site)
         sb.append("\n").append(indent).append("    ").append(name)
           .append("=\"").append(xmlEsc(escapeFxmlPrefix(value))).append("\"");
     }

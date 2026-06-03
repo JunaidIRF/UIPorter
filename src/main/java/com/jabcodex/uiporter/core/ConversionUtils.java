@@ -5,19 +5,12 @@ import com.jabcodex.uiporter.model.Node;
 
 import java.util.*;
 
-/**
- * Shared utilities used by every adapter: string helpers and AppMetadata graph operations.
- * Genuinely shared data (NAMED_COLORS, rgbToHex) lives here too.
- * Framework-specific maps and methods live in each adapter class.
- */
 public final class ConversionUtils {
 
     private ConversionUtils() {}
 
-    // ── Component maps ─────────────────────────────────────────────────────────
 
 
-    /** Common System.Drawing.Color names → hex. */
     public static final Map<String, String> NAMED_COLORS = new LinkedHashMap<>();
 
     static {
@@ -41,9 +34,7 @@ public final class ConversionUtils {
         NAMED_COLORS.put("Transparent", "transparent");
     }
 
-    // ── Color helpers ──────────────────────────────────────────────────────────
 
-    /** Converts three decimal R,G,B strings to a lowercase hex color like #90c226. */
     public static String rgbToHex(String r, String g, String b) {
         try {
             return String.format("#%02x%02x%02x",
@@ -55,7 +46,6 @@ public final class ConversionUtils {
         }
     }
 
-    /** Overload for int values, clamped to 0-255. */
     public static String rgbToHex(int r, int g, int b) {
         return String.format("#%02x%02x%02x",
             Math.max(0, Math.min(255, r)),
@@ -63,9 +53,7 @@ public final class ConversionUtils {
             Math.max(0, Math.min(255, b)));
     }
 
-    // ── String helpers ─────────────────────────────────────────────────────────
 
-    /** Strips package prefix and generics from a type name, e.g. "java.util.List<String>" → "List". */
     public static String simpleName(String fullType) {
         if (fullType == null || fullType.isBlank()) return "";
         int lt = fullType.indexOf('<');
@@ -74,7 +62,6 @@ public final class ConversionUtils {
         return i >= 0 ? base.substring(i + 1) : base;
     }
 
-    /** Wraps a value in double quotes, escaping internal backslashes and quotes. */
     public static String quoted(String value) {
         String safe = value == null ? "" : value
             .replace("\\", "\\\\")
@@ -84,7 +71,6 @@ public final class ConversionUtils {
         return "\"" + safe + "\"";
     }
 
-    // ── Graph helpers ──────────────────────────────────────────────────────────
 
     public static Node getOrMake(AppMetadata app, String id) {
         Node n = findById(app, id);

@@ -17,37 +17,14 @@ import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 
-/**
- * Compiles and launches generated JavaFX code in a separate JVM.
- *
- * Two modes:
- *   DEV (Maven) mode  - preview-runner/pom.xml is present (project checkout).
- *     Uses mvn compile + mvn javafx:run inside the preview-runner subproject.
- *   STANDALONE mode   - preview-runner/pom.xml is absent (jpackage app-image).
- *     Uses javax.tools.JavaCompiler + the bundled java executable.
- *     Source/classes are kept in ~/.uiporter/preview-work/.
- */
 public class PreviewLauncher {
 
-    // Target package and class inside preview-runner
     private static final String TARGET_PACKAGE   = "com.jabcodex.preview";
     private static final String TARGET_CLASS     = "PreviewApp";
 
-    // ── Public entry point ─────────────────────────────────────────────────────
 
-    /**
-     * Normalizes {@code code}, writes it into the preview-runner project,
-     * compiles it, then launches it in a new JVM process.
-     *
-     * Must be called from a background thread (compile is blocking).
-     *
-     * @throws PreviewException if the code is invalid or compilation fails.
-     * @throws IOException      if file I/O fails.
-     * @throws InterruptedException if the compile process is interrupted.
-     */
     public static void launch(String code) throws PreviewException, IOException, InterruptedException {
         String trimmed = code.trim();
-        // FXML content - wrap it in a minimal JavaFX Application that loads it via FXMLLoader
         if (trimmed.startsWith("<?xml") || (trimmed.startsWith("<") && !trimmed.startsWith("<java"))) {
             launchStandalone(buildFxmlWrapper(trimmed));
             return;
@@ -55,26 +32,14 @@ public class PreviewLauncher {
         launchStandalone(normalizeCode(code));
     }
 
-    /**
-     * Generates a self-contained PreviewApp.java wrapper that embeds the given FXML
-     * content as a string constant and loads it via FXMLLoader.
-     * The fx:controller attribute is stripped so the preview doesn't require the
-     * controller class to be on the classpath.
-     */
     private static String buildFxmlWrapper(String fxmlContent) {
-        // Strip fx:controller to avoid ClassNotFoundException in preview
-        // Strip onXxx="#method" event handlers - no controller means no handlers
         String cleanFxml = fxmlContent
             .replaceAll("\\s+fx:controller\\s*=\\s*\"[^\"]*\"", "")
             .replaceAll("\\s+on[A-Za-z]+\\s*=\\s*\"#[^\"]*\"", "");
 
-        // JavaFX 25 FXMLLoader cannot resolve PieChart.Data as an inner-class type.
-        // Strip <data>...</data> blocks from PieChart elements and collect the data
-        // items so we can add them programmatically after loader.load().
         StringBuilder pieInit = new StringBuilder();
         cleanFxml = extractAndStripPieChartData(cleanFxml, pieInit);
 
-        // Escape for embedding in a Java string literal
         String escaped = cleanFxml
             .replace("\\", "\\\\")
             .replace("\"", "\\\"")
@@ -107,12 +72,6 @@ public class PreviewLauncher {
             + "}\n";
     }
 
-    /**
-     * Removes {@code <data>…</data>} blocks that contain {@code <PieChart.Data>}
-     * children from the FXML string (JavaFX 25 cannot resolve the inner class via
-     * FXML) and appends equivalent Java statements to {@code codeOut} so the data
-     * is populated programmatically after the FXML is loaded.
-     */
     private static String extractAndStripPieChartData(String fxml, StringBuilder codeOut) {
         java.util.regex.Pattern dataBlock = java.util.regex.Pattern.compile(
                 "<data>(\\s*<PieChart\\.Data[\\s\\S]*?)</data>",
@@ -127,10 +86,9 @@ public class PreviewLauncher {
         java.util.regex.Matcher m = dataBlock.matcher(fxml);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
-            // Determine the owning PieChart's fx:id by scanning backwards
             String before = fxml.substring(0, m.start());
             int lastPie = before.lastIndexOf("<PieChart");
-            String chartId = "pieChart";        // sensible default
+            String chartId = "pieChart";
             if (lastPie >= 0) {
                 String tagFragment = before.substring(lastPie,
                         Math.min(before.length(), lastPie + 500));
@@ -138,7 +96,6 @@ public class PreviewLauncher {
                 if (idm.find()) chartId = idm.group(1);
             }
 
-            // Collect PieChart.Data items from the block
             java.util.List<String[]> items = new java.util.ArrayList<>();
             java.util.regex.Matcher di = dataItem.matcher(m.group(1));
             while (di.find()) {
@@ -164,14 +121,12 @@ public class PreviewLauncher {
                 codeOut.append("        }\n");
             }
 
-            // Remove the <data>…</data> block from the FXML
             m.appendReplacement(sb, "");
         }
         m.appendTail(sb);
         return sb.toString();
     }
 
-    // ── Launch ────────────────────────────────────────────────────────────────
 
     private static void launchStandalone(String normalized)
             throws PreviewException, IOException, InterruptedException {
@@ -191,10 +146,6 @@ public class PreviewLauncher {
         return dir;
     }
 
-    /**
-     * Compiles PreviewApp.java using javax.tools (requires jdk.compiler module
-     * to be present in the runtime image - ensured by build-release.bat).
-     */
     private static void compileStandalone(Path sourceFile, Path outputDir)
             throws PreviewException {
         javax.tools.JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -245,8 +196,6 @@ public class PreviewLauncher {
 
         Process proc = new ProcessBuilder(cmd).redirectErrorStream(true).start();
 
-        // Drain output in a background thread so the pipe buffer never fills and blocks the process.
-        // Also capture it so we can report the error if the process exits immediately.
         StringBuilder output = new StringBuilder();
         Thread drainer = new Thread(() -> {
             try (BufferedReader r = new BufferedReader(new InputStreamReader(proc.getInputStream()))) {
@@ -257,8 +206,6 @@ public class PreviewLauncher {
         drainer.setDaemon(true);
         drainer.start();
 
-        // Give the process 6 seconds. If it is still running → window opened successfully.
-        // If it already exited with a non-zero code → it crashed; surface the output as an error.
         boolean exited = proc.waitFor(6, java.util.concurrent.TimeUnit.SECONDS);
         if (exited && proc.exitValue() != 0) {
             drainer.join(1500);
@@ -267,30 +214,19 @@ public class PreviewLauncher {
         }
     }
 
-    /**
-     * Finds a usable java executable for the preview subprocess.
-     * Checks (in order):
-     *   1. java.home/bin/java[.exe]  - works when running from a full JDK;
-     *      jpackage bundles a stripped JRE that may not have this file.
-     *   2. JAVA_HOME env var
-     *   3. java / java.exe on the system PATH
-     */
     private static String findJavaExe() throws PreviewException {
         boolean isWindows = System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win");
         String exeName = isWindows ? "java.exe" : "java";
 
-        // 1. java.home/bin/
         Path fromJavaHome = Path.of(System.getProperty("java.home"), "bin", exeName);
         if (Files.isExecutable(fromJavaHome)) return fromJavaHome.toString();
 
-        // 2. JAVA_HOME env var
         String javaHomeEnv = System.getenv("JAVA_HOME");
         if (javaHomeEnv != null) {
             Path candidate = Path.of(javaHomeEnv, "bin", exeName);
             if (Files.isExecutable(candidate)) return candidate.toString();
         }
 
-        // 3. java on PATH
         if (tryJavaExe("java"))        return "java";
         if (isWindows && tryJavaExe("java.exe")) return "java.exe";
 
@@ -310,14 +246,7 @@ public class PreviewLauncher {
         }
     }
 
-    /**
-     * Finds all javafx-*.jar files needed by the preview subprocess.
-     *
-     * 1. jpackage app-image: scans app/javafx-mods/ (bundled by build-release.bat).
-     * 2. Dev mode: scans jdk.module.path entries (set by the Maven JavaFX plugin).
-     */
     private static String findJavaFxModulePath() throws PreviewException {
-        // 1. app-image: javafx JARs bundled in app/javafx-mods/
         Path appDir = App.PROJECT_ROOT != null ? App.PROJECT_ROOT.resolve("app") : null;
         if (appDir != null && Files.isDirectory(appDir.resolve("javafx-mods"))) {
             try (Stream<Path> listing = Files.list(appDir.resolve("javafx-mods"))) {
@@ -334,7 +263,6 @@ public class PreviewLauncher {
             }
         }
 
-        // 2. Dev mode: scan jdk.module.path (populated by Maven JavaFX plugin)
         String modulePath = System.getProperty("jdk.module.path");
         if (modulePath != null) {
             String joined = java.util.Arrays.stream(
@@ -365,10 +293,8 @@ public class PreviewLauncher {
             "In dev mode, launch via 'mvn javafx:run' so jdk.module.path is set.");
     }
 
-    // ── Code normalization ─────────────────────────────────────────────────────
 
     private static String normalizeCode(String code) throws PreviewException {
-        // Must extend Application
         if (!code.contains("extends Application")) {
             throw new PreviewException(
                 "The generated code doesn't appear to be a runnable JavaFX Application.\n" +
@@ -376,30 +302,24 @@ public class PreviewLauncher {
             );
         }
 
-        // Capture original class name
         Matcher m = Pattern.compile("public\\s+class\\s+(\\w+)\\s+extends\\s+Application")
                            .matcher(code);
         String originalName = m.find() ? m.group(1) : null;
 
-        // 1. Strip any existing package declaration
         code = code.replaceAll("(?m)^\\s*package\\s+[\\w.]+\\s*;\\s*\\R?", "");
 
-        // 2. Prepend the target package
         code = "package " + TARGET_PACKAGE + ";\n\n" + code.stripLeading();
 
-        // 3. Rename the public class to PreviewApp
         code = code.replaceAll(
             "public\\s+class\\s+\\w+\\s+extends\\s+Application",
             "public class " + TARGET_CLASS + " extends Application"
         );
 
-        // 4. Rename original class references (e.g. OriginalName.launch(...))
         if (originalName != null && !originalName.equals(TARGET_CLASS)) {
             code = code.replace(originalName + ".launch(",  TARGET_CLASS + ".launch(");
             code = code.replace(originalName + ".main(",    TARGET_CLASS + ".main(");
         }
 
-        // 5. Inject main() if missing (AI output can omit it)
         if (!code.contains("public static void main")) {
             int lastBrace = code.lastIndexOf('}');
             if (lastBrace >= 0) {
@@ -411,9 +331,7 @@ public class PreviewLauncher {
         return code;
     }
 
-    // ── Exception type ────────────────────────────────────────────────────────
 
-    /** Thrown for expected preview errors (compile failure, bad code, missing dirs). */
     public static class PreviewException extends Exception {
         public PreviewException(String message) { super(message); }
     }
