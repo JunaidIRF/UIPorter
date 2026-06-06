@@ -68,7 +68,7 @@
 
 ---
 
-## 🔄 Conversion Matrix
+## 🔄 Conversion Table
 
 | From / To | JavaFX Java | FXML | WinForms C# |
 |:---:|:---:|:---:|:---:|
