@@ -196,7 +196,7 @@ Adding a new framework only requires writing one new adapter class, nothing else
 | **OS** | Windows 10 / 11 (64-bit) |
 | **Run the app** | Nothing - JVM is bundled in the release |
 | **Live Preview** | [JDK 25+](https://adoptium.net/) with `javac` on PATH |
-| **AI features** | Internet connection + free [Google Gemini API key](https://aistudio.google.com/apikey) |
+| **AI features** | Internet connection + [Google Gemini API key](https://cloud.google.com/products/gemini-enterprise-agent-platform) |
 
 ---
 
